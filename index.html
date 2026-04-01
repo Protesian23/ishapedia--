@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>医者ペディア — ハイクラス完全版</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
@@ -26,6 +28,8 @@ button,input,select,textarea{font-family:inherit;font-size:14px;}
 .hn-award:hover{color:#b8960c;}
 .hn-offer{color:#ef4444;position:relative;}
 .hn-badge{position:absolute;top:-8px;right:-16px;background:#ef4444;color:#fff;font-size:9px;font-weight:700;min-width:17px;height:17px;border-radius:20px;display:flex;align-items:center;justify-content:center;padding:0 4px;}
+.hn-mypage{background:linear-gradient(135deg,#9b88c1,#7CB4CC);color:#fff;border-radius:20px;padding:5px 12px;font-size:11px;font-weight:700;display:flex;align-items:center;gap:4px;}
+.hn-mypage:hover{opacity:.88;color:#fff;}
 .back-btn{display:inline-flex;align-items:center;gap:5px;color:#888;font-size:13px;cursor:pointer;background:none;border:none;padding:0;margin-bottom:18px;}
 .back-btn:hover{color:#333;}
 
@@ -63,6 +67,28 @@ button,input,select,textarea{font-family:inherit;font-size:14px;}
 .search-btn:hover{background:#374151;transform:translateY(-1px);}
 .search-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
 
+/* ══ ① TRUST CARDS (Why ISHAPEDIA) ══ */
+.trust-section{max-width:820px;margin:36px auto 0;padding:0 16px 40px;}
+.trust-heading{text-align:center;font-size:14px;font-weight:800;color:#555;margin-bottom:18px;letter-spacing:.04em;}
+.trust-heading span{color:#9b88c1;}
+.trust-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+@media(max-width:620px){.trust-grid{grid-template-columns:1fr;}}
+.trust-card{background:#fff;border-radius:10px;box-shadow:0 2px 12px rgba(0,0,0,.06);padding:22px 18px;border-top:3px solid transparent;text-align:center;transition:transform .2s,box-shadow .2s;}
+.trust-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.1);}
+.trust-card.tc1{border-top-color:#7bc5b4;}
+.trust-card.tc2{border-top-color:#9b88c1;}
+.trust-card.tc3{border-top-color:#7CB4CC;}
+.trust-icon{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 12px;}
+.tc1 .trust-icon{background:#f0fdfa;}
+.tc2 .trust-icon{background:#f5f3ff;}
+.tc3 .trust-icon{background:#eff6ff;}
+.trust-title{font-size:13px;font-weight:800;color:#222;margin-bottom:6px;}
+.trust-desc{font-size:11px;color:#6b7280;line-height:1.7;}
+.trust-badge{display:inline-block;background:#f4f5f7;color:#555;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;margin-top:8px;}
+.tc1 .trust-badge{background:#ecfdf5;color:#065f46;}
+.tc2 .trust-badge{background:#f5f3ff;color:#6d28d9;}
+.tc3 .trust-badge{background:#eff6ff;color:#1d4ed8;}
+
 /* ══ RIBBON ══ */
 .ribbon{position:absolute;top:-4px;left:20px;width:60px;color:#fff;text-align:center;padding:12px 4px 20px;z-index:10;box-shadow:2px 2px 6px rgba(0,0,0,.1);}
 .ribbon::after{content:'';position:absolute;bottom:0;left:0;border-left:30px solid transparent;border-right:30px solid transparent;border-bottom:13px solid #fff;}
@@ -70,6 +96,45 @@ button,input,select,textarea{font-family:inherit;font-size:14px;}
 .ribbon-best{background:#7bc5b4;}
 .ribbon-high{background:#7CB4CC;}
 .ribbon-good{background:#8A73B6;}
+
+/* ══ Corner Badge (replaces large ribbon on mobile) ══ */
+.corner-badge{position:absolute;top:8px;right:8px;background:#7bc5b4;color:#fff;font-size:9px;font-weight:900;padding:3px 7px;border-radius:10px;letter-spacing:.03em;display:none;}
+.card-best .corner-badge{background:#7bc5b4;}
+.card-high .corner-badge{background:#7CB4CC;}
+.card-good .corner-badge{background:#8A73B6;}
+@media(max-width:480px){
+  .ribbon{display:none!important;}
+  .corner-badge{display:block;}
+  .card-body,.o-body{padding-left:14px!important;}
+}
+
+/* ══ ② COMPARE CHECKBOX ══ */
+.compare-cb-wrap{position:absolute;top:10px;left:10px;z-index:20;display:none;}
+.compare-cb-wrap.visible{display:block;}
+.compare-cb{width:18px;height:18px;cursor:pointer;accent-color:#9b88c1;}
+.compare-bar{position:fixed;bottom:0;left:0;width:100%;background:#222633;color:#fff;z-index:300;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;transform:translateY(100%);transition:transform .3s;border-top:2px solid #9b88c1;}
+.compare-bar.visible{transform:translateY(0);}
+.compare-bar-left{font-size:13px;font-weight:700;}
+.compare-bar-left span{color:#9b88c1;}
+.btn-compare{background:linear-gradient(135deg,#9b88c1,#7CB4CC);color:#fff;border:none;border-radius:6px;padding:10px 22px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;}
+.btn-compare:disabled{opacity:.4;cursor:not-allowed;}
+.btn-compare-clear{background:none;border:1px solid rgba(255,255,255,.2);color:#9ca3af;border-radius:6px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;}
+.compare-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:400;display:flex;align-items:flex-start;justify-content:center;padding:16px;overflow-y:auto;}
+.compare-modal{background:#fff;border-radius:12px;width:100%;max-width:820px;box-shadow:0 24px 64px rgba(0,0,0,.3);animation:modalUp .3s ease-out;}
+.compare-modal-hdr{padding:16px 22px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;}
+.compare-modal-hdr h3{font-size:16px;font-weight:900;}
+.compare-tbl-wrap{overflow-x:auto;padding:20px;}
+.compare-tbl{width:100%;border-collapse:collapse;font-size:12px;}
+.compare-tbl th{background:#f4f5f7;font-weight:800;padding:10px 14px;text-align:left;border-bottom:2px solid #e2e8f0;color:#444;white-space:nowrap;}
+.compare-tbl td{padding:10px 14px;border-bottom:1px solid #f0f0f0;vertical-align:top;line-height:1.6;}
+.compare-tbl tr:hover td{background:#fafafa;}
+.compare-tbl .row-lbl{font-weight:700;color:#555;background:#f9fafb;}
+.ct-score{font-size:20px;font-weight:900;color:#9b88c1;font-family:"Helvetica Neue",Arial,sans-serif;}
+.ct-bar-wrap{display:flex;align-items:center;gap:6px;}
+.ct-bar{height:6px;border-radius:3px;background:linear-gradient(90deg,#9b88c1,#7CB4CC);}
+.ct-bar-bg{flex:1;background:#e5e7eb;border-radius:3px;overflow:hidden;height:6px;}
+.trend-up{color:#059669;font-weight:700;}
+.trend-dn{color:#dc2626;font-weight:700;}
 
 /* ══ AMBI CARD ══ */
 .ambi-card{background:#fff;border-top:3px solid #7CB4CC;position:relative;cursor:pointer;transition:all .2s;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,.05);margin-bottom:8px;overflow:visible;}
@@ -99,8 +164,18 @@ button,input,select,textarea{font-family:inherit;font-size:14px;}
 .action-btn{background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.08);border:1px solid #eee;color:#555;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:5px;}
 .action-btn:hover{box-shadow:0 4px 12px rgba(0,0,0,.12);color:#7CB4CC;border-color:#7CB4CC;}
 
+/* ══ ⑦ AI RECOMMENDATION REASON CARD ══ */
+.ai-reason-box{background:linear-gradient(135deg,rgba(155,136,193,.08),rgba(124,180,204,.08));border:1px solid rgba(155,136,193,.25);border-radius:6px;padding:10px 12px;margin-top:10px;display:none;}
+.ai-reason-box.show{display:block;}
+.ai-reason-hdr{display:flex;align-items:center;gap:5px;margin-bottom:6px;}
+.ai-reason-hdr .ai-chip{background:linear-gradient(135deg,#9b88c1,#7CB4CC);color:#fff;font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;}
+.ai-reason-text{font-size:11px;color:#4a5568;line-height:1.65;}
+.ai-stat-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px;}
+.ai-stat{background:#fff;border:1px solid rgba(155,136,193,.3);border-radius:4px;padding:4px 9px;font-size:10px;font-weight:700;color:#6b21a8;white-space:nowrap;}
+.ai-stat .num{font-size:13px;color:#9b88c1;margin-right:2px;}
+
 /* ══ S2 ══ */
-.s2-wrap{padding:18px 0 64px;}
+.s2-wrap{padding:18px 0 120px;}
 .s2-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
 .s2-count{font-size:13px;font-weight:700;color:#555;}
 .s2-count strong{font-size:18px;color:#111;}
@@ -110,16 +185,33 @@ button,input,select,textarea{font-family:inherit;font-size:14px;}
 .skew-tab > span{transform:skewX(15deg);}
 .skew-tab.active{background:#f4f5f7;color:#333;box-shadow:0 -3px 8px rgba(0,0,0,.06);z-index:2;}
 .skew-tab:not(.active):hover{background:rgba(255,255,255,.2);}
+.s2-compare-toggle{display:flex;align-items:center;gap:6px;font-size:12px;color:#555;cursor:pointer;padding:6px 12px;border:1px solid #d1d5db;border-radius:6px;background:#fff;font-weight:700;transition:all .15s;}
+.s2-compare-toggle:hover{border-color:#9b88c1;color:#9b88c1;}
+.s2-compare-toggle.active{border-color:#9b88c1;color:#9b88c1;background:#f5f3ff;}
 
 /* ══ S3 DETAIL ══ */
 .det-wrap{border-radius:8px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.12);margin-bottom:28px;}
-.det-hdr{background:linear-gradient(135deg,#6b5794,#5a91a8);padding:24px 30px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.det-hdr{background:linear-gradient(135deg,#6b5794,#5a91a8);padding:24px 30px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;position:relative;}
 .dh-name{font-size:24px;font-weight:900;color:#fff;margin-bottom:3px;}
 .dh-name span{font-size:15px;font-weight:500;color:rgba(255,255,255,.55);margin-left:5px;}
 .dh-sub{font-size:12px;color:rgba(255,255,255,.6);}
 .dh-score-lbl{font-size:10px;font-weight:700;color:rgba(255,255,255,.55);text-align:right;margin-bottom:4px;}
 .dh-score{font-size:46px;font-weight:900;color:#7eeacf;line-height:1;letter-spacing:-2px;font-family:"Helvetica Neue",Arial,sans-serif;}
 .dh-score span{font-size:16px;font-weight:500;color:rgba(255,255,255,.35);}
+
+/* ④ Booking CTAs in header */
+.det-hdr-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;}
+.btn-consult{background:linear-gradient(135deg,#7eeacf,#5fa898);color:#1a2e2a;border:none;border-radius:8px;padding:10px 20px;font-size:13px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;transition:all .2s;box-shadow:0 3px 12px rgba(126,234,207,.35);}
+.btn-consult:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(126,234,207,.5);}
+.btn-call{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.6);border-radius:8px;padding:10px 20px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;transition:all .2s;}
+.btn-call:hover{border-color:#fff;background:rgba(255,255,255,.1);}
+
+/* ④ Mobile floating booking bar */
+.mobile-book-bar{display:none;position:fixed;bottom:0;left:0;width:100%;background:#fff;border-top:1px solid #e2e8f0;padding:10px 16px;z-index:200;gap:8px;box-shadow:0 -4px 16px rgba(0,0,0,.1);}
+@media(max-width:640px){.mobile-book-bar.show{display:flex;}}
+.mobile-book-bar .btn-consult-mob{flex:1;background:linear-gradient(135deg,#9b88c1,#7CB4CC);color:#fff;border:none;border-radius:8px;padding:12px;font-size:13px;font-weight:800;cursor:pointer;}
+.mobile-book-bar .btn-call-mob{flex:0 0 auto;background:#fff;border:2px solid #d1d5db;color:#555;border-radius:8px;padding:12px 16px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;}
+
 .det-body{background:#fff;}
 .det-grid{display:grid;grid-template-columns:1fr 1fr;}
 @media(max-width:640px){.det-grid{grid-template-columns:1fr;}}
@@ -137,6 +229,22 @@ button,input,select,textarea{font-family:inherit;font-size:14px;}
 .sc-val{font-size:11px;font-weight:700;color:#222;white-space:nowrap;font-family:"Helvetica Neue",Arial,sans-serif;}
 .ibox{background:#f9fafb;border-radius:4px;padding:12px;margin-top:12px;}
 .ibox-t{font-size:11px;font-weight:700;color:#555;margin-bottom:6px;}
+
+/* ③ Pricing Section */
+.price-section{border-top:1px solid #f0f0f0;margin-top:16px;padding-top:16px;}
+.price-section-title{font-size:12px;font-weight:800;color:#333;margin-bottom:10px;display:flex;align-items:center;gap:5px;}
+.price-table-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+@media(max-width:380px){.price-table-grid{grid-template-columns:1fr;}}
+.price-card{border-radius:6px;padding:11px 13px;border:1px solid #e2e8f0;}
+.price-card.insurance{background:#f0fdf4;border-color:#a7f3d0;}
+.price-card.oop{background:#fff7ed;border-color:#fed7aa;}
+.price-type{font-size:10px;font-weight:700;margin-bottom:4px;}
+.price-card.insurance .price-type{color:#065f46;}
+.price-card.oop .price-type{color:#9a3412;}
+.price-range{font-size:14px;font-weight:900;color:#222;font-family:"Helvetica Neue",Arial,sans-serif;}
+.price-note{font-size:10px;color:#888;margin-top:3px;line-height:1.5;}
+.price-disclaimer{font-size:10px;color:#6b7280;background:#f9fafb;border-left:2px solid #d1d5db;padding:8px 10px;border-radius:0 4px 4px 0;margin-top:8px;line-height:1.65;}
+
 .rev-sec{padding:18px 26px;border-top:1px solid #f0f0f0;}
 .rev-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;padding-bottom:9px;border-bottom:2px solid #333;}
 .rev-ttl{font-size:14px;font-weight:800;color:#222;}
@@ -188,6 +296,14 @@ button,input,select,textarea{font-family:inherit;font-size:14px;}
 .btn-modal-submit:hover{transform:translateY(-1px);box-shadow:0 5px 16px rgba(123,197,180,.45);}
 .ai-warn{font-size:10px;color:#dc2626;font-weight:700;margin-bottom:24px;}
 
+/* ⑩ Follow-up opt-in */
+.followup-optin-box{background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:14px 16px;margin-bottom:20px;}
+.followup-optin-box label{display:flex;align-items:flex-start;gap:10px;cursor:pointer;}
+.followup-optin-box input[type=checkbox]{width:16px;height:16px;accent-color:#0ea5e9;flex-shrink:0;margin-top:2px;}
+.followup-optin-title{font-size:12px;font-weight:800;color:#0369a1;margin-bottom:2px;}
+.followup-optin-desc{font-size:11px;color:#0c4a6e;line-height:1.6;}
+.followup-unlock-note{font-size:10px;background:#dbeafe;color:#1e40af;padding:4px 8px;border-radius:3px;margin-top:5px;display:inline-block;font-weight:700;}
+
 /* ══ S4 REVIEW ══ */
 .form-card{background:#fff;border-radius:8px;box-shadow:0 4px 18px rgba(0,0,0,.07);padding:26px 28px;max-width:560px;margin:0 auto;}
 .btn-teal-sub{width:100%;background:#7bc5b4;color:#fff;border:none;border-radius:6px;padding:13px;font-size:15px;font-weight:700;cursor:pointer;}
@@ -203,7 +319,10 @@ button,input,select,textarea{font-family:inherit;font-size:14px;}
 .cb-item{border:1.5px solid #e2e8f0;border-radius:5px;padding:12px 14px;text-align:center;font-size:12px;color:#555;cursor:pointer;transition:all .15s;user-select:none;font-weight:600;}
 .cb-item:hover{border-color:#7bc5b4;color:#008f7a;background:#f0fdfa;}
 .cb-item.on{background:#ebf7f5;border-color:#7bc5b4;color:#008f7a;box-shadow:0 0 0 1px #7bc5b4;font-weight:700;}
-.comment-area{width:100%;border:1px solid #d1d5db;border-radius:5px;padding:12px;font-size:13px;color:#333;resize:vertical;min-height:110px;outline:none;background:#f9fafb;transition:border-color .15s;}
+.comment-area{width:100%;border:1px solid #d1d5db;border-radius:5px;padding:12px;font-size:13px;color:#333;resize:vertical;outline:none;background:#f9fafb;transition:border-color .15s;}
+/* ⑤ Mobile textarea height reduction */
+.comment-area{min-height:110px;}
+@media(max-width:480px){.comment-area{min-height:64px;}}
 .comment-area:focus{border-color:#7bc5b4;}
 .char-count{text-align:right;font-size:11px;color:#aaa;margin-top:3px;}
 .btn-scout{width:100%;background:linear-gradient(135deg,#7CB4CC,#9b88c1);color:#fff;border:none;border-radius:30px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 5px 20px rgba(124,180,204,.4);display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;}
@@ -216,6 +335,8 @@ button,input,select,textarea{font-family:inherit;font-size:14px;}
 .offer-score-row{display:flex;align-items:flex-start;justify-content:center;}
 .offer-badge{background:rgba(255,255,255,.2);font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;margin-top:16px;margin-right:6px;flex-shrink:0;}
 .offer-big{font-size:108px;font-weight:900;color:#fff;line-height:.92;letter-spacing:-6px;font-family:"Helvetica Neue",Arial,sans-serif;text-shadow:0 4px 20px rgba(0,0,0,.2);}
+/* ⑤ Mobile score font shrink */
+@media(max-width:480px){.offer-big{font-size:48px;letter-spacing:-2px;}}
 .offer-tabs{display:grid;grid-template-columns:repeat(3,1fr);max-width:680px;margin:22px auto 0;}
 .o-tab{text-align:center;padding:13px 10px 14px;cursor:pointer;background:rgba(255,255,255,.18);display:flex;flex-direction:column;align-items:center;gap:3px;border-right:1px solid rgba(255,255,255,.1);transition:background .15s;border-top-left-radius:4px;border-top-right-radius:4px;}
 .o-tab:last-child{border-right:none;}
@@ -241,6 +362,79 @@ button,input,select,textarea{font-family:inherit;font-size:14px;}
 .o-dt-in{border:1px solid #d1d5db;border-radius:4px;padding:8px 10px;font-size:13px;color:#333;background:#f9fafb;outline:none;width:220px;max-width:100%;}
 .btn-orange{background:#ff7a59;color:#fff;border:none;border-radius:4px;padding:11px 26px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(255,122,89,.35);transition:all .2s;white-space:nowrap;}
 .btn-orange:hover{background:#e66a4d;transform:translateY(-1px);}
+
+/* ══ ⑥ S7 MY PAGE ══ */
+.mypage-hero{background:linear-gradient(135deg,#9b88c1,#7CB4CC);padding:32px 20px 24px;color:#fff;text-align:center;}
+.mypage-avatar{width:68px;height:68px;border-radius:50%;background:rgba(255,255,255,.2);border:3px solid rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:30px;}
+.mypage-name{font-size:18px;font-weight:900;margin-bottom:2px;}
+.mypage-sub{font-size:11px;opacity:.75;}
+.kyc-pill{display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.4);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;margin-top:10px;}
+.mypage-body{max-width:680px;margin:0 auto;padding:24px 16px 80px;}
+.mp-section{background:#fff;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.06);margin-bottom:16px;overflow:hidden;}
+.mp-section-hdr{padding:14px 18px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;justify-content:space-between;}
+.mp-section-title{font-size:13px;font-weight:800;color:#222;display:flex;align-items:center;gap:6px;}
+.mp-section-title .icon{font-size:16px;}
+.mp-section-count{font-size:11px;color:#888;font-weight:700;background:#f4f5f7;padding:2px 8px;border-radius:10px;}
+.mp-list{list-style:none;}
+.mp-item{display:flex;align-items:flex-start;gap:12px;padding:13px 18px;border-bottom:1px solid #f4f5f7;transition:background .15s;}
+.mp-item:last-child{border-bottom:none;}
+.mp-item:hover{background:#fafafa;}
+.mp-item-icon{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;background:#f4f5f7;}
+.mp-item-body{flex:1;min-width:0;}
+.mp-item-title{font-size:13px;font-weight:700;color:#222;margin-bottom:2px;}
+.mp-item-sub{font-size:11px;color:#888;line-height:1.5;}
+.mp-item-badge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;flex-shrink:0;}
+.badge-green{background:#dcfce7;color:#065f46;}
+.badge-teal{background:#f0fdfa;color:#0f766e;}
+.badge-purple{background:#f5f3ff;color:#6d28d9;}
+.badge-blue{background:#eff6ff;color:#1d4ed8;}
+.badge-orange{background:#fff7ed;color:#c2410c;}
+.mp-empty{text-align:center;padding:28px;color:#9ca3af;font-size:12px;}
+.mp-followup-card{background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:16px 18px;margin:12px 18px;}
+.mp-followup-title{font-size:12px;font-weight:800;color:#0369a1;margin-bottom:10px;display:flex;align-items:center;gap:5px;}
+.mp-followup-timeline{display:flex;flex-direction:column;gap:0;}
+.mp-ft-item{display:flex;align-items:center;gap:10px;padding:7px 0;position:relative;}
+.mp-ft-item::before{content:'';position:absolute;left:11px;top:0;bottom:0;width:2px;background:#bae6fd;z-index:0;}
+.mp-ft-item:first-child::before{top:50%;}
+.mp-ft-item:last-child::before{bottom:50%;}
+.mp-ft-dot{width:24px;height:24px;border-radius:50%;background:#0ea5e9;color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;z-index:1;position:relative;}
+.mp-ft-dot.done{background:#059669;}
+.mp-ft-dot.upcoming{background:#e2e8f0;color:#9ca3af;}
+.mp-ft-text{font-size:11px;color:#0c4a6e;}
+.mp-ft-date{font-size:10px;color:#64748b;font-weight:700;}
+
+/* ══ ⑨ REVIEW ANALYTICS DASHBOARD ══ */
+.analytics-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px;}
+@media(min-width:560px){.analytics-grid{grid-template-columns:repeat(4,1fr);}}
+.analytics-card{background:#fff;border-radius:6px;padding:10px 12px;border:1px solid #e2e8f0;text-align:center;}
+.analytics-num{font-size:20px;font-weight:900;color:#0369a1;font-family:"Helvetica Neue",Arial,sans-serif;line-height:1;}
+.analytics-num.good{color:#059669;}
+.analytics-num.warn{color:#d97706;}
+.analytics-label{font-size:10px;color:#64748b;font-weight:700;margin-top:4px;}
+.analytics-sub{font-size:9px;color:#9ca3af;margin-top:2px;}
+.analytics-premium-badge{display:inline-flex;align-items:center;gap:4px;background:linear-gradient(135deg,#9b88c1,#7CB4CC);color:#fff;font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;margin-bottom:8px;}
+
+/* ══ ⑧ AI SECOND OPINION CHAT ══ */
+.ai-chat-section{padding:20px 26px;border-top:1px solid #f0f0f0;background:#fafafa;}
+.ai-chat-header{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+.ai-chat-title{font-size:13px;font-weight:800;color:#333;}
+.ai-chat-badge{background:linear-gradient(135deg,#9b88c1,#7CB4CC);color:#fff;font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;}
+.ai-chat-messages{display:flex;flex-direction:column;gap:10px;margin-bottom:12px;min-height:80px;}
+.ai-msg{display:flex;gap:8px;align-items:flex-start;}
+.ai-msg.user{flex-direction:row-reverse;}
+.ai-msg-bubble{max-width:78%;padding:9px 13px;border-radius:12px;font-size:12px;line-height:1.65;}
+.ai-msg.bot .ai-msg-bubble{background:#f0f9ff;border:1px solid #bae6fd;color:#0c4a6e;border-radius:4px 12px 12px 12px;}
+.ai-msg.user .ai-msg-bubble{background:linear-gradient(135deg,#9b88c1,#7CB4CC);color:#fff;border-radius:12px 4px 12px 12px;}
+.ai-msg-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;}
+.ai-msg.bot .ai-msg-avatar{background:linear-gradient(135deg,#9b88c1,#7CB4CC);}
+.ai-msg.user .ai-msg-avatar{background:#e5e7eb;font-size:11px;}
+.ai-chat-input-row{display:flex;gap:8px;}
+.ai-chat-input{flex:1;border:1px solid #d1d5db;border-radius:8px;padding:10px 14px;font-size:13px;outline:none;background:#fff;transition:border-color .2s;}
+.ai-chat-input:focus{border-color:#9b88c1;}
+.btn-chat-send{background:linear-gradient(135deg,#9b88c1,#7CB4CC);color:#fff;border:none;border-radius:8px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .2s;}
+.btn-chat-send:hover{opacity:.88;}
+.ai-chat-typing{display:flex;align-items:center;gap:6px;padding:8px 13px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:4px 12px 12px 12px;font-size:11px;color:#0369a1;max-width:120px;}
+.ai-chat-disclaimer{font-size:10px;color:#9ca3af;margin-top:8px;text-align:center;line-height:1.5;}
 
 /* ══ AWARD SECTION ══ */
 .award-section{background:#1a1c23;padding:72px 16px 80px;position:relative;overflow:hidden;}
@@ -309,11 +503,15 @@ button,input,select,textarea{font-family:inherit;font-size:14px;}
 @media(max-width:640px){
   .hdr-nav{gap:8px;}.hn{font-size:11px;}
   .card-body,.o-body{padding:16px 14px 16px 82px;}
-  .offer-big{font-size:76px;}
   .scout-card{padding:20px 16px;}
   .det-hdr{padding:16px 18px;}.dh-name{font-size:19px;}
   .award-info-box{flex-direction:column;padding:16px;}
   .grand-card{padding:22px 16px;}.grand-name{font-size:20px;}
+}
+/* ⑤ Score font on mobile */
+@media(max-width:480px){
+  .dh-score{font-size:32px!important;}
+  .dh-score span{font-size:13px!important;}
 }
 
 /* ══ 機能1: AI コンシェルジュ ══ */
@@ -323,7 +521,9 @@ button,input,select,textarea{font-family:inherit;font-size:14px;}
 .btn-ai-open svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
 .ai-input-panel{margin-top:14px;animation:fadeIn .25s ease-out;}
 .ai-input-label{font-size:12px;font-weight:700;color:#718096;margin-bottom:8px;display:flex;align-items:center;gap:5px;}
-.ai-textarea{width:100%;border:1px solid #e2e8f0;border-radius:8px;padding:12px 14px;font-size:13px;color:#4a5568;outline:none;background:#f9fafb;resize:none;min-height:88px;line-height:1.7;transition:border-color .2s;}
+.ai-textarea{width:100%;border:1px solid #e2e8f0;border-radius:8px;padding:12px 14px;font-size:13px;color:#4a5568;outline:none;background:#f9fafb;resize:none;line-height:1.7;transition:border-color .2s;}
+.ai-textarea{min-height:88px;}
+@media(max-width:480px){.ai-textarea{min-height:60px;}}
 .ai-textarea:focus{border-color:#9b88c1;box-shadow:0 0 0 1px #9b88c1;}
 .ai-send-row{display:flex;align-items:center;justify-content:space-between;margin-top:10px;gap:10px;}
 .ai-hint{font-size:11px;color:#aaa;line-height:1.5;}
@@ -367,6 +567,353 @@ button,input,select,textarea{font-family:inherit;font-size:14px;}
 .vt-360-inner iframe{position:absolute;inset:0;width:100%;height:100%;border:none;}
 .vt-360-badge{position:absolute;top:12px;left:12px;background:rgba(0,0,0,.6);color:#fff;font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;display:flex;align-items:center;gap:4px;z-index:5;pointer-events:none;}
 .vt-360-badge::before{content:'';width:7px;height:7px;border-radius:50%;background:#7eeacf;display:inline-block;}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* ══════════════════════════════════════════════
+   SPEEDA-STYLE CLINIC DASHBOARD  (#page-dashboard)
+   ══════════════════════════════════════════════ */
+
+/* ── Dashboard page wrapper ── */
+.dashboard-page{background:#f0f2f5;min-height:100vh;font-family:"Inter","Noto Sans JP",sans-serif;}
+
+/* ── Top header bar ── */
+.db-topbar{background:#fff;border-bottom:1px solid #e2e8f0;padding:0 24px;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
+.db-topbar-left{display:flex;align-items:center;gap:10px;}
+.db-topbar-logo{width:28px;height:28px;border-radius:6px;background:linear-gradient(135deg,#3B4DB8,#5B8DEF);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#fff;}
+.db-topbar-title{font-size:14px;font-weight:700;color:#1a202c;letter-spacing:.02em;}
+.db-topbar-right{display:flex;align-items:center;gap:8px;}
+.db-top-pill{display:inline-flex;align-items:center;gap:4px;background:#EFF6FF;color:#1D4ED8;border:1px solid #BFDBFE;border-radius:4px;padding:4px 10px;font-size:11px;font-weight:700;}
+
+/* ── Sidebar + main layout ── */
+.db-layout{display:flex;min-height:calc(100vh - 54px);}
+.db-sidebar{width:200px;background:#fff;border-right:1px solid #e2e8f0;padding:16px 0;flex-shrink:0;}
+@media(max-width:768px){.db-sidebar{display:none;}}
+.db-nav-item{display:flex;align-items:center;gap:8px;padding:10px 20px;font-size:13px;font-weight:600;color:#6B7280;cursor:pointer;transition:all .15s;border-left:3px solid transparent;}
+.db-nav-item:hover{background:#F9FAFB;color:#374151;}
+.db-nav-item.active{background:#EFF6FF;color:#1D4ED8;border-left-color:#3B4DB8;}
+.db-nav-icon{font-size:16px;width:20px;text-align:center;}
+.db-nav-badge{margin-left:auto;background:#EF4444;color:#fff;font-size:9px;font-weight:700;padding:2px 5px;border-radius:10px;}
+
+/* ── Main content area ── */
+.db-main{flex:1;padding:20px 24px;overflow-x:hidden;}
+@media(max-width:640px){.db-main{padding:12px 14px;}}
+
+/* ── Page title row ── */
+.db-page-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.db-page-title{font-size:18px;font-weight:800;color:#1a202c;letter-spacing:-.02em;}
+.db-page-subtitle{font-size:12px;color:#6B7280;margin-top:2px;}
+.db-page-actions{display:flex;gap:8px;}
+.btn-db-primary{background:linear-gradient(135deg,#3B4DB8,#5B8DEF);color:#fff;border:none;border-radius:6px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;}
+.btn-db-secondary{background:#fff;color:#374151;border:1px solid #D1D5DB;border-radius:6px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;}
+
+/* ── KPI summary cards ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;}
+@media(max-width:960px){.kpi-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:480px){.kpi-grid{grid-template-columns:1fr 1fr;}}
+.kpi-card{background:#fff;border-radius:10px;padding:16px 18px;border:1px solid #E5E7EB;box-shadow:0 1px 4px rgba(0,0,0,.04);position:relative;overflow:hidden;}
+.kpi-card::after{content:'';position:absolute;top:0;left:0;width:4px;height:100%;border-radius:4px 0 0 4px;}
+.kpi-card.kv1::after{background:#3B82F6;}
+.kpi-card.kv2::after{background:#10B981;}
+.kpi-card.kv3::after{background:#F59E0B;}
+.kpi-card.kv4::after{background:#8B5CF6;}
+.kpi-label{font-size:11px;font-weight:700;color:#9CA3AF;letter-spacing:.04em;text-transform:uppercase;margin-bottom:6px;}
+.kpi-value{font-size:26px;font-weight:900;color:#111827;line-height:1;font-family:"Inter",sans-serif;letter-spacing:-.03em;}
+.kpi-unit{font-size:13px;font-weight:500;color:#6B7280;margin-left:2px;}
+.kpi-trend{display:flex;align-items:center;gap:4px;margin-top:6px;font-size:11px;font-weight:700;}
+.kpi-trend.up{color:#059669;}
+.kpi-trend.dn{color:#DC2626;}
+.kpi-trend .kpi-vs{color:#9CA3AF;font-weight:400;}
+
+/* ── Section card (chart container) ── */
+.db-card{background:#fff;border-radius:10px;border:1px solid #E5E7EB;box-shadow:0 1px 4px rgba(0,0,0,.04);margin-bottom:16px;overflow:hidden;}
+.db-card-hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid #F3F4F6;}
+.db-card-title{font-size:13px;font-weight:800;color:#111827;display:flex;align-items:center;gap:6px;}
+.db-card-title .title-dot{width:8px;height:8px;border-radius:50%;}
+.db-card-actions{display:flex;align-items:center;gap:8px;}
+.db-tag{display:inline-flex;align-items:center;gap:3px;background:#F3F4F6;color:#6B7280;border-radius:4px;padding:3px 8px;font-size:10px;font-weight:700;}
+.db-tag.blue{background:#EFF6FF;color:#1D4ED8;}
+.db-tag.green{background:#ECFDF5;color:#065F46;}
+.db-tag.amber{background:#FFFBEB;color:#92400E;}
+.db-tag.purple{background:#F5F3FF;color:#5B21B6;}
+.db-tag.red{background:#FEF2F2;color:#991B1B;}
+.db-card-body{padding:16px 18px;}
+
+/* ── Chart legend component ── */
+.chart-legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px;}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:#374151;}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.legend-line{width:18px;height:3px;border-radius:2px;flex-shrink:0;}
+.legend-sq{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
+
+/* ── Two-column grid ── */
+.db-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+@media(max-width:768px){.db-grid-2{grid-template-columns:1fr;}}
+.db-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px;}
+@media(max-width:900px){.db-grid-3{grid-template-columns:1fr 1fr;}}
+@media(max-width:540px){.db-grid-3{grid-template-columns:1fr;}}
+
+/* ── Conversion funnel ── */
+.funnel-wrap{padding:8px 0;}
+.funnel-row{display:flex;align-items:center;gap:12px;margin-bottom:6px;}
+.funnel-bar-wrap{flex:1;background:#F3F4F6;border-radius:4px;overflow:hidden;height:36px;position:relative;}
+.funnel-bar{height:100%;border-radius:4px;display:flex;align-items:center;padding:0 12px;transition:width .6s ease;}
+.funnel-label{font-size:12px;font-weight:700;color:#fff;white-space:nowrap;}
+.funnel-meta{min-width:90px;text-align:right;}
+.funnel-num{font-size:14px;font-weight:900;color:#111827;font-family:"Inter",sans-serif;}
+.funnel-pct{font-size:10px;color:#9CA3AF;font-weight:600;}
+.funnel-step-label{min-width:110px;font-size:11px;font-weight:700;color:#374151;text-align:right;}
+.funnel-arrow{font-size:10px;color:#D1D5DB;margin:0 4px;}
+.conversion-explain{background:#FFFBEB;border:1px solid #FDE68A;border-radius:6px;padding:12px 14px;margin-top:12px;font-size:11px;color:#78350F;line-height:1.7;}
+.conversion-explain strong{color:#92400E;}
+
+/* ── Competitor matrix ── */
+.matrix-wrap{position:relative;padding:16px;}
+.matrix-axis-x{display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:#9CA3AF;padding:0 24px;margin-bottom:4px;}
+.matrix-axis-y-label{position:absolute;left:4px;top:50%;transform:translateY(-50%) rotate(-90deg);font-size:10px;font-weight:700;color:#9CA3AF;white-space:nowrap;}
+.matrix-canvas-wrap{position:relative;width:100%;}
+.matrix-quadrant-labels{position:absolute;inset:0;pointer-events:none;}
+.mql{position:absolute;font-size:10px;font-weight:700;padding:3px 6px;border-radius:3px;opacity:.65;}
+.mql.tl{top:12px;left:12px;background:#FEF2F2;color:#991B1B;}
+.mql.tr{top:12px;right:12px;background:#ECFDF5;color:#065F46;}
+.mql.bl{bottom:12px;left:12px;background:#FFFBEB;color:#92400E;}
+.mql.br{bottom:12px;right:12px;background:#EFF6FF;color:#1D4ED8;}
+
+/* ── Donut chart with central label ── */
+.donut-wrap{position:relative;width:160px;height:160px;margin:0 auto;}
+.donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;}
+.donut-center-num{font-size:24px;font-weight:900;color:#111827;line-height:1;font-family:"Inter",sans-serif;}
+.donut-center-label{font-size:10px;font-weight:700;color:#6B7280;margin-top:2px;}
+
+/* ── Donut legend list ── */
+.donut-legend{display:flex;flex-direction:column;gap:7px;margin-top:12px;}
+.dl-item{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.dl-bar-wrap{flex:1;background:#F3F4F6;border-radius:3px;height:5px;overflow:hidden;}
+.dl-bar{height:100%;border-radius:3px;}
+.dl-name{font-size:11px;font-weight:600;color:#374151;min-width:90px;}
+.dl-pct{font-size:11px;font-weight:700;color:#111827;min-width:32px;text-align:right;}
+
+/* ── Trend area chart container ── */
+.trend-chart-wrap{position:relative;}
+.trend-annotation{position:absolute;background:#1a202c;color:#fff;font-size:10px;font-weight:700;padding:4px 8px;border-radius:4px;white-space:nowrap;pointer-events:none;z-index:5;}
+.trend-annotation::after{content:'';position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);border-left:5px solid transparent;border-right:5px solid transparent;border-top:5px solid #1a202c;}
+
+/* ── Keyword ranking ── */
+.kw-list{display:flex;flex-direction:column;gap:0;}
+.kw-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #F3F4F6;}
+.kw-item:last-child{border-bottom:none;}
+.kw-rank{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;flex-shrink:0;}
+.kw-rank.r1{background:#FFD700;color:#78350F;}
+.kw-rank.r2{background:#C0C0C0;color:#374151;}
+.kw-rank.r3{background:#CD7F32;color:#fff;}
+.kw-rank.rn{background:#F3F4F6;color:#6B7280;}
+.kw-word{font-size:12px;font-weight:700;color:#111827;flex:1;}
+.kw-bar-wrap{width:100px;background:#F3F4F6;border-radius:3px;height:6px;overflow:hidden;}
+.kw-bar{height:100%;border-radius:3px;background:linear-gradient(90deg,#3B4DB8,#5B8DEF);}
+.kw-count{font-size:11px;font-weight:700;color:#374151;min-width:36px;text-align:right;}
+.kw-trend{font-size:10px;font-weight:700;}
+.kw-trend.up{color:#059669;}
+.kw-trend.dn{color:#DC2626;}
+.kw-trend.fl{color:#9CA3AF;}
+
+/* ── Task list ── */
+.task-list{display:flex;flex-direction:column;gap:0;}
+.task-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid #F3F4F6;}
+.task-item:last-child{border-bottom:none;}
+.task-prio{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px;}
+.task-prio.high{background:#EF4444;}
+.task-prio.med{background:#F59E0B;}
+.task-prio.low{background:#10B981;}
+.task-body{flex:1;}
+.task-title{font-size:12px;font-weight:700;color:#111827;margin-bottom:1px;}
+.task-due{font-size:10px;color:#9CA3AF;}
+.task-badge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;flex-shrink:0;}
+.task-badge.urgent{background:#FEF2F2;color:#DC2626;}
+.task-badge.normal{background:#EFF6FF;color:#1D4ED8;}
+.task-badge.done{background:#ECFDF5;color:#065F46;}
+
+/* ── Strength/Weakness bar chart ── */
+.sw-list{display:flex;flex-direction:column;gap:10px;}
+.sw-item{display:flex;flex-direction:column;gap:4px;}
+.sw-label-row{display:flex;justify-content:space-between;align-items:center;}
+.sw-label{font-size:11px;font-weight:700;color:#374151;}
+.sw-score{font-size:11px;font-weight:800;color:#111827;font-family:"Inter",sans-serif;}
+.sw-bar-wrap{width:100%;background:#F3F4F6;border-radius:4px;height:8px;overflow:hidden;position:relative;}
+.sw-bar-self{height:100%;border-radius:4px;transition:width .6s ease;}
+.sw-avg-line{position:absolute;top:0;height:100%;width:2px;background:#374151;opacity:.4;}
+
+/* ── Churn analysis table ── */
+.churn-table{width:100%;border-collapse:collapse;font-size:12px;}
+.churn-table th{background:#F9FAFB;font-weight:700;padding:9px 12px;text-align:left;color:#6B7280;border-bottom:2px solid #E5E7EB;font-size:11px;text-transform:uppercase;letter-spacing:.04em;}
+.churn-table td{padding:9px 12px;border-bottom:1px solid #F3F4F6;color:#374151;vertical-align:middle;}
+.churn-table tr:hover td{background:#F9FAFB;}
+.risk-badge{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;}
+.risk-badge.high{background:#FEF2F2;color:#DC2626;}
+.risk-badge.med{background:#FFFBEB;color:#D97706;}
+.risk-badge.low{background:#ECFDF5;color:#059669;}
+
+/* ── AI next action panel ── */
+.ai-action-list{display:flex;flex-direction:column;gap:10px;}
+.ai-action-item{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;background:#F8FAFF;border:1px solid #DBEAFE;border-radius:8px;border-left:3px solid #3B4DB8;}
+.ai-action-icon{font-size:18px;flex-shrink:0;}
+.ai-action-body{flex:1;}
+.ai-action-title{font-size:12px;font-weight:800;color:#1E3A5F;margin-bottom:2px;}
+.ai-action-desc{font-size:11px;color:#4B5563;line-height:1.6;}
+.btn-action-do{background:#3B4DB8;color:#fff;border:none;border-radius:4px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+
+/* ── Equipment comparison table ── */
+.equip-table{width:100%;border-collapse:collapse;font-size:12px;}
+.equip-table th{font-size:11px;font-weight:700;padding:9px 12px;text-align:center;border-bottom:2px solid #E5E7EB;color:#6B7280;}
+.equip-table th:first-child{text-align:left;}
+.equip-table td{padding:8px 12px;border-bottom:1px solid #F3F4F6;text-align:center;vertical-align:middle;}
+.equip-table td:first-child{text-align:left;font-weight:600;color:#374151;}
+.equip-table tr:hover td{background:#F9FAFB;}
+.equip-check{color:#059669;font-size:16px;}
+.equip-cross{color:#D1D5DB;font-size:16px;}
+.equip-self{background:#EFF6FF;}
+
+/* ── Profile page ── */
+.profile-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+@media(max-width:560px){.profile-form-grid{grid-template-columns:1fr;}}
+.form-group{display:flex;flex-direction:column;gap:5px;}
+.form-label{font-size:11px;font-weight:700;color:#6B7280;letter-spacing:.03em;}
+.form-input{border:1px solid #E5E7EB;border-radius:6px;padding:9px 12px;font-size:13px;color:#111827;outline:none;background:#fff;transition:border-color .2s;}
+.form-input:focus{border-color:#3B4DB8;box-shadow:0 0 0 2px rgba(59,77,184,.12);}
+.form-textarea{border:1px solid #E5E7EB;border-radius:6px;padding:9px 12px;font-size:13px;color:#111827;outline:none;background:#fff;resize:vertical;min-height:90px;transition:border-color .2s;}
+.form-textarea:focus{border-color:#3B4DB8;}
+.photo-upload{border:2px dashed #D1D5DB;border-radius:10px;padding:28px;text-align:center;cursor:pointer;background:#F9FAFB;transition:all .2s;}
+.photo-upload:hover{background:#EFF6FF;border-color:#3B4DB8;}
+.lang-badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.lang-badge{background:#EFF6FF;color:#1D4ED8;border:1px solid #BFDBFE;border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;}
+.career-list{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+.career-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:6px;}
+.career-year{font-size:11px;font-weight:700;color:#9CA3AF;min-width:70px;}
+.career-text{font-size:12px;font-weight:600;color:#374151;flex:1;}
+.btn-add-row{background:none;border:1px dashed #D1D5DB;border-radius:6px;padding:7px 14px;font-size:12px;font-weight:700;color:#9CA3AF;cursor:pointer;width:100%;text-align:center;transition:all .15s;}
+.btn-add-row:hover{border-color:#3B4DB8;color:#3B4DB8;}
+
+/* ── Certifications page ── */
+.cert-stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;}
+@media(max-width:640px){.cert-stat-grid{grid-template-columns:repeat(2,1fr);}}
+.cert-stat-card{background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:12px 14px;text-align:center;}
+.cert-stat-num{font-size:22px;font-weight:900;color:#111827;line-height:1;font-family:"Inter",sans-serif;}
+.cert-stat-label{font-size:10px;font-weight:700;color:#9CA3AF;margin-top:3px;}
+.cert-table{width:100%;border-collapse:collapse;font-size:12px;}
+.cert-table th{background:#F9FAFB;font-weight:700;padding:9px 12px;text-align:left;border-bottom:2px solid #E5E7EB;color:#6B7280;font-size:11px;text-transform:uppercase;}
+.cert-table td{padding:9px 12px;border-bottom:1px solid #F3F4F6;vertical-align:middle;}
+.cert-table tr:hover td{background:#F9FAFB;}
+.status-dot{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;}
+.status-dot::before{content:'';width:7px;height:7px;border-radius:50%;display:inline-block;}
+.status-dot.verified{color:#059669;}.status-dot.verified::before{background:#059669;}
+.status-dot.pending{color:#D97706;}.status-dot.pending::before{background:#D97706;}
+.status-dot.expired{color:#DC2626;}.status-dot.expired::before{background:#DC2626;}
+.cert-upload-area{border:2px dashed #D1D5DB;border-radius:8px;padding:20px;text-align:center;cursor:pointer;background:#F9FAFB;transition:all .2s;margin-top:12px;}
+.cert-upload-area:hover{background:#EFF6FF;border-color:#3B4DB8;}
+
+/* ── Reviews page ── */
+.review-tabs{display:flex;gap:0;border-bottom:2px solid #E5E7EB;margin-bottom:16px;}
+.rv-tab{padding:9px 16px;font-size:12px;font-weight:700;color:#9CA3AF;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;}
+.rv-tab.active{color:#1D4ED8;border-bottom-color:#3B4DB8;}
+.rv-tab:hover:not(.active){color:#374151;}
+.rv-card{background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:14px 16px;margin-bottom:10px;}
+.rv-card.neg{border-left:3px solid #EF4444;}
+.rv-card.pos{border-left:3px solid #10B981;}
+.rv-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.rv-stars{display:flex;gap:2px;color:#F59E0B;font-size:13px;}
+.rv-date{font-size:10px;color:#9CA3AF;}
+.rv-text{font-size:12px;color:#374151;line-height:1.7;margin-bottom:8px;}
+.rv-ai-suggestion{background:#F8FAFF;border:1px solid #DBEAFE;border-radius:5px;padding:8px 10px;margin-top:8px;}
+.rv-ai-label{font-size:10px;font-weight:700;color:#3B4DB8;margin-bottom:3px;}
+.rv-ai-text{font-size:11px;color:#4B5563;line-height:1.6;}
+.btn-reply{background:#fff;border:1px solid #D1D5DB;color:#374151;border-radius:4px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;margin-top:8px;}
+.btn-reply:hover{background:#F9FAFB;}
+.btn-reply-prem{background:#F5F3FF;border:1px solid #C4B5FD;color:#5B21B6;border-radius:4px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;}
+
+/* ── Schedule page ── */
+.schedule-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:16px;}
+.sch-day-hdr{text-align:center;font-size:11px;font-weight:700;color:#9CA3AF;padding:5px 0;}
+.sch-slot{border:1px solid #E5E7EB;border-radius:4px;min-height:64px;padding:4px;background:#fff;font-size:10px;}
+.sch-slot.open{background:#ECFDF5;border-color:#A7F3D0;}
+.sch-slot.closed{background:#F3F4F6;border-color:#E5E7EB;}
+.sch-slot.special{background:#FFFBEB;border-color:#FDE68A;}
+.sch-slot-time{font-weight:700;color:#374151;}
+.sch-slot-count{color:#9CA3AF;margin-top:2px;}
+.emergency-form{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:480px){.emergency-form{grid-template-columns:1fr;}}
+
+/* ── Offers page ── */
+.offer-stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;}
+@media(max-width:540px){.offer-stat-grid{grid-template-columns:1fr;}}
+.offer-stat-card{background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:12px 14px;text-align:center;}
+.offer-stat-num{font-size:20px;font-weight:900;color:#111827;line-height:1;font-family:"Inter",sans-serif;}
+.offer-stat-label{font-size:10px;font-weight:700;color:#9CA3AF;margin-top:3px;}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #F3F4F6;}
+.toggle-row:last-child{border-bottom:none;}
+.toggle-label{font-size:12px;font-weight:700;color:#374151;}
+.toggle-sub{font-size:10px;color:#9CA3AF;}
+.toggle-switch{position:relative;width:38px;height:22px;flex-shrink:0;}
+.toggle-switch input{opacity:0;width:0;height:0;}
+.toggle-track{position:absolute;inset:0;border-radius:11px;background:#D1D5DB;cursor:pointer;transition:background .2s;}
+.toggle-track.on{background:#3B4DB8;}
+.toggle-thumb{position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 4px rgba(0,0,0,.2);}
+.toggle-track.on .toggle-thumb{transform:translateX(16px);}
+.premium-lock-overlay{background:repeating-linear-gradient(45deg,rgba(255,255,255,.03),rgba(255,255,255,.03) 10px,transparent 10px,transparent 20px);filter:blur(1px);pointer-events:none;}
+.premium-lock-badge{display:inline-flex;align-items:center;gap:4px;background:linear-gradient(135deg,#3B4DB8,#5B8DEF);color:#fff;border-radius:4px;padding:4px 10px;font-size:11px;font-weight:700;}
+.campaign-table{width:100%;border-collapse:collapse;font-size:12px;}
+.campaign-table th{background:#F9FAFB;font-weight:700;padding:9px 12px;text-align:left;border-bottom:2px solid #E5E7EB;color:#6B7280;font-size:11px;}
+.campaign-table td{padding:9px 12px;border-bottom:1px solid #F3F4F6;vertical-align:middle;}
+.hot-lead-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid #F3F4F6;}
+.hot-lead-item:last-child{border-bottom:none;}
+.hot-score{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex-shrink:0;font-family:"Inter",sans-serif;}
+.hot-score.s90{background:#ECFDF5;color:#059669;}
+.hot-score.s80{background:#EFF6FF;color:#1D4ED8;}
+.hot-score.s70{background:#FFFBEB;color:#D97706;}
+.hot-body{flex:1;}
+.hot-title{font-size:12px;font-weight:700;color:#111827;margin-bottom:2px;}
+.hot-sub{font-size:10px;color:#6B7280;line-height:1.5;}
+.hot-ai{background:#F8FAFF;border:1px solid #DBEAFE;border-radius:4px;padding:5px 8px;margin-top:5px;font-size:10px;color:#1E3A5F;}
+.hot-actions{display:flex;flex-direction:column;gap:4px;flex-shrink:0;}
+.btn-hot-primary{background:#3B4DB8;color:#fff;border:none;border-radius:4px;padding:5px 10px;font-size:10px;font-weight:700;cursor:pointer;white-space:nowrap;}
+.btn-hot-secondary{background:#fff;color:#374151;border:1px solid #D1D5DB;border-radius:4px;padding:5px 10px;font-size:10px;font-weight:700;cursor:pointer;}
+
+/* ── BCP page ── */
+.bcp-feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0;}
+@media(max-width:540px){.bcp-feature-grid{grid-template-columns:1fr;}}
+.bcp-feature-card{background:#F8FAFF;border:1px solid #DBEAFE;border-radius:8px;padding:14px;}
+.bcp-feature-icon{font-size:24px;margin-bottom:8px;}
+.bcp-feature-title{font-size:12px;font-weight:800;color:#1E3A5F;margin-bottom:4px;}
+.bcp-feature-desc{font-size:11px;color:#4B5563;line-height:1.6;}
+
+/* ── Alert banner ── */
+.alert-banner{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:7px;margin-bottom:14px;font-size:12px;font-weight:600;}
+.alert-banner.info{background:#EFF6FF;border:1px solid #BFDBFE;color:#1E40AF;}
+.alert-banner.warn{background:#FFFBEB;border:1px solid #FDE68A;color:#92400E;}
+.alert-banner.success{background:#ECFDF5;border:1px solid #A7F3D0;color:#065F46;}
+
+/* ── Dashboard close button ── */
+.db-close-btn{display:flex;align-items:center;gap:6px;background:none;border:1px solid #E5E7EB;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:700;color:#374151;cursor:pointer;margin-left:auto;}
+.db-close-btn:hover{background:#F9FAFB;}
+
+/* ── SPEEDA monthly trend chart ── */
+.trend-chart-container{position:relative;height:220px;}
+.trend-period-tabs{display:flex;gap:4px;margin-bottom:12px;}
+.trend-period-tab{padding:4px 10px;font-size:11px;font-weight:700;border-radius:4px;cursor:pointer;color:#6B7280;background:none;border:1px solid transparent;transition:all .15s;}
+.trend-period-tab.active{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE;}
+
+/* ── Progress bar ── */
+.progress-bar-wrap{background:#F3F4F6;border-radius:4px;overflow:hidden;height:8px;}
+.progress-bar{height:100%;border-radius:4px;transition:width .6s ease;}
+
+/* ══ Improved award section contrast ══ */
+.award-section .award-desc{color:#9CA3AF;}
+.award-section .award-info-text{color:#9CA3AF;}
+.award-section .award-info-text strong{color:#E5E7EB;}
+.award-section .rt-item-name{color:#F3F4F6;}
+.award-section .rt-item-clinic{color:#9CA3AF;}
+.award-section .rt-item-score{color:#D4AF37;font-weight:800;}
+.award-section .grand-quote{color:#D1D5DB;}
+.award-section .grand-clinic{color:#9CA3AF;}
+.award-section .exc-clinic{color:#9CA3AF;}
+
 </style>
 </head>
 <body>
@@ -383,6 +930,13 @@ button,input,select,textarea{font-family:inherit;font-size:14px;}
       <button class="hn" onclick="go('s5')">スカウト登録</button>
       <button class="hn hn-award" onclick="scrollToAward()">👑 アワード2026</button>
       <button class="hn hn-offer" onclick="go('s6')">新着オファー<span class="hn-badge">1</span></button>
+      <button class="hn hn-mypage" onclick="go('s7')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        マイページ
+      </button>
+      <button class="hn" style="background:linear-gradient(135deg,#3B4DB8,#5B8DEF);color:#fff;border-radius:20px;padding:5px 12px;font-size:11px;font-weight:700;" onclick="go('db')">
+        📊 院長DB
+      </button>
     </nav>
   </div>
 </header>
@@ -391,8 +945,34 @@ button,input,select,textarea{font-family:inherit;font-size:14px;}
 <div id="s1">
   <div class="hero-main">
     <h2>あなたの医者が、きっと見つかる</h2>
-    <p>広告費に依存しない、客観データに基づく医師マッチング</p>
+    <p>医療に選択の自由を。患者が知るべき情報を、患者の手に。共に歩む最適な医師をマッチングする</p>
   </div>
+
+  <!-- ① Why ISHAPEDIA trust cards -->
+  <div class="trust-section">
+    <div class="trust-heading"><span>ISHAPEDIA</span> が選ばれる3つの理由</div>
+    <div class="trust-grid">
+      <div class="trust-card tc1">
+        <div class="trust-icon">🚫</div>
+        <div class="trust-title">広告収入ゼロ</div>
+        <div class="trust-desc">クリニックからの掲載料・広告費は一切受け取りません。すべての評価は患者と医師の純粋なデータです。</div>
+        <span class="trust-badge">No Sponsored Content</span>
+      </div>
+      <div class="trust-card tc2">
+        <div class="trust-icon">✅</div>
+        <div class="trust-title">KYC認証済みの患者レビュー</div>
+        <div class="trust-desc">診察券・領収書のアップロードによる本人確認（KYC）を通過したレビューのみを掲載。サクラ・業者投稿を完全排除。</div>
+        <span class="trust-badge">Verified Patient Reviews</span>
+      </div>
+      <div class="trust-card tc3">
+        <div class="trust-icon">🩺</div>
+        <div class="trust-title">医師同士のピア評価</div>
+        <div class="trust-desc">実際に連携した同業医師が技術・倫理観・紹介意向を評価。患者視点だけでない多角的な信頼スコアを形成。</div>
+        <span class="trust-badge">Peer Doctor Ratings</span>
+      </div>
+    </div>
+  </div>
+
   <div class="search-float">
     <div class="search-card">
       <!-- ══ 機能1: AIお悩みコンシェルジュ ══ -->
@@ -488,54 +1068,152 @@ button,input,select,textarea{font-family:inherit;font-size:14px;}
 <!-- ════════ S2: RESULTS ════════ -->
 <div id="s2" class="hidden">
   <div class="wrap s2-wrap">
-    <div class="s2-topbar"><div class="s2-count">検索結果 <strong>3</strong> 件</div><span style="font-size:11px;color:#aaa;font-weight:700;">並び順：マッチ度が高い順 ↓</span></div>
+    <div class="s2-topbar">
+      <div class="s2-count">検索結果 <strong>3</strong> 件</div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:11px;color:#aaa;font-weight:700;">マッチ度が高い順 ↓</span>
+        <!-- ② Compare toggle -->
+        <button class="s2-compare-toggle" id="compareToggle" onclick="toggleCompareMode()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="18"/><rect x="14" y="3" width="7" height="18"/></svg>
+          クリニック比較
+        </button>
+      </div>
+    </div>
     <div class="skew-tabs" style="border-radius:6px 6px 0 0;overflow:hidden;margin-bottom:16px;">
       <div class="skew-tab active" onclick="setSkewTab(this)"><span>マッチ度順</span></div>
       <div class="skew-tab" onclick="setSkewTab(this)"><span>ピアスコア順</span></div>
       <div class="skew-tab" onclick="setSkewTab(this)"><span>改善報告率順</span></div>
       <div class="skew-tab" onclick="setSkewTab(this)"><span>待ち時間順</span></div>
     </div>
+
     <!-- Card 1 -->
-    <div class="ambi-card card-best" onclick="go('s3')">
+    <div class="ambi-card card-best" id="card1" onclick="handleCardClick(event,'s3')">
+      <!-- ② Compare checkbox -->
+      <div class="compare-cb-wrap" id="cbc1"><input type="checkbox" class="compare-cb" data-name="青山デンタルクリニック（山田 太郎）" data-score="98" data-equipment="マイクロスコープ,歯科用CT,静脈内鎮静法" onchange="updateCompare()" onclick="event.stopPropagation()"></div>
+      <!-- ⑤ Corner badge -->
+      <div class="corner-badge">マッチ度◎</div>
       <div class="ribbon ribbon-best"><p class="ribbon-text">マッチ<br>度<br>極大</p></div>
       <div class="card-body">
         <div style="font-size:15px;font-weight:700;color:#222;line-height:1.4;margin-bottom:12px;">【青山一丁目】痛みに配慮した丁寧な治療 / 最新設備完備で難易度の高い抜歯にも対応</div>
         <div class="card-person"><div class="card-av"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div><div><div class="clinic-name">青山デンタルクリニック</div><div class="doc-name">山田 太郎 <span>医師（42歳）</span></div></div></div>
         <div class="tags"><span class="a-tag"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>青山一丁目駅から2分</span><span class="a-tag purple">🎓 東京医科歯科大 歯学部卒</span><span class="a-tag blue">🏅 歯周病専門医</span><span class="a-tag blue">🏅 歯科麻酔専門医</span><span class="a-tag green">🔬 マイクロスコープ完備</span><span class="a-tag green">📡 歯科用CT完備</span><span class="a-tag orange">📅 土日祝・夜間対応可</span><span class="a-tag teal">🌍 英語対応</span></div>
+        <!-- ⑦ AI recommendation reason -->
+        <div class="ai-reason-box" id="aiReason1">
+          <div class="ai-reason-hdr"><span class="ai-chip">🤖 AI推薦理由</span></div>
+          <div class="ai-reason-text">「痛みへの配慮」「歯科恐怖症対応」のキーワードに完全一致。静脈内鎮静法の実績が群を抜き、同条件の患者からの改善報告率が最も高い医師です。</div>
+          <div class="ai-stat-row">
+            <span class="ai-stat"><span class="num">89%</span>が痛みなしと報告</span>
+            <span class="ai-stat"><span class="num">95%</span>改善率</span>
+            <span class="ai-stat"><span class="num">142</span>件のKYC済み口コミ</span>
+          </div>
+        </div>
+        <div class="card-footer"><div></div><div style="display:flex;gap:8px;"><button class="action-btn" onclick="event.stopPropagation()">📋 詳細レポート</button><button class="btn-detail" onclick="event.stopPropagation();go('s3')">詳細を見る <span style="color:#aaa;">›</span></button></div></div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="ambi-card card-high" id="card2" onclick="handleCardClick(event,'s3')">
+      <div class="compare-cb-wrap" id="cbc2"><input type="checkbox" class="compare-cb" data-name="表参道スマイル歯科（鈴木 一郎）" data-score="91" data-equipment="マイクロスコープ,笑気麻酔" onchange="updateCompare()" onclick="event.stopPropagation()"></div>
+      <div class="corner-badge">マッチ度◯</div>
+      <div class="ribbon ribbon-high"><p class="ribbon-text">マッチ<br>度<br>高</p></div>
+      <div class="card-body">
+        <div style="font-size:15px;font-weight:700;color:#222;line-height:1.4;margin-bottom:12px;">【表参道】審美・インプラントに特化 / 女性医師も在籍、丁寧なカウンセリング</div>
+        <div class="card-person"><div class="card-av"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div><div><div class="clinic-name">表参道スマイル歯科</div><div class="doc-name">鈴木 一郎 <span>医師（55歳）</span></div></div></div>
+        <div class="tags"><span class="a-tag">表参道駅から3分</span><span class="a-tag blue">🏅 口腔外科専門医</span><span class="a-tag green">🔬 マイクロスコープ完備</span><span class="a-tag orange">📅 土日祝対応可</span><span class="a-tag teal">🌍 中国語対応</span></div>
+        <div class="ai-reason-box" id="aiReason2">
+          <div class="ai-reason-hdr"><span class="ai-chip">🤖 AI推薦理由</span></div>
+          <div class="ai-reason-text">カウンセリング評価が高く、初診患者の不安解消に強みがあります。審美歯科の実績も豊富で、長期的なケアを重視する患者に適しています。</div>
+          <div class="ai-stat-row">
+            <span class="ai-stat"><span class="num">82%</span>が痛みなしと報告</span>
+            <span class="ai-stat"><span class="num">88%</span>改善率</span>
+            <span class="ai-stat"><span class="num">96</span>件のKYC済み口コミ</span>
+          </div>
+        </div>
         <div class="card-footer"><div></div><div style="display:flex;gap:8px;"><button class="action-btn" onclick="event.stopPropagation()">📋 詳細レポート</button><button class="btn-detail">詳細を見る <span style="color:#aaa;">›</span></button></div></div>
       </div>
     </div>
-    <!-- Card 2 -->
-    <div class="ambi-card card-high"><div class="ribbon ribbon-high"><p class="ribbon-text">マッチ<br>度<br>高</p></div><div class="card-body"><div style="font-size:15px;font-weight:700;color:#222;line-height:1.4;margin-bottom:12px;">【表参道】審美・インプラントに特化 / 女性医師も在籍、丁寧なカウンセリング</div><div class="card-person"><div class="card-av"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div><div><div class="clinic-name">表参道スマイル歯科</div><div class="doc-name">鈴木 一郎 <span>医師（55歳）</span></div></div></div><div class="tags"><span class="a-tag"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>表参道駅から3分</span><span class="a-tag blue">🏅 口腔外科専門医</span><span class="a-tag green">🔬 マイクロスコープ完備</span><span class="a-tag orange">📅 土日祝対応可</span><span class="a-tag teal">🌍 中国語対応</span></div><div class="card-footer"><div></div><div style="display:flex;gap:8px;"><button class="action-btn" onclick="event.stopPropagation()">📋 詳細レポート</button><button class="btn-detail">詳細を見る <span style="color:#aaa;">›</span></button></div></div></div></div>
+
     <!-- Card 3 -->
-    <div class="ambi-card card-good" style="border-top-color:#8A73B6;"><div class="ribbon ribbon-good"><p class="ribbon-text">マッチ<br>度<br>良</p></div><div class="card-body"><div style="font-size:15px;font-weight:700;color:#222;line-height:1.4;margin-bottom:12px;">【南青山】小児歯科・矯正専門 / 子連れ歓迎・平日夜間対応</div><div class="card-person"><div class="card-av"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div><div><div class="clinic-name">ミナミ青山歯科医院</div><div class="doc-name">佐藤 花子 <span>医師（34歳）</span></div></div></div><div class="tags"><span class="a-tag"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>表参道駅から5分</span><span class="a-tag purple">🎓 東京医科歯科大 歯学部卒</span><span class="a-tag blue">🏅 認定医</span><span class="a-tag orange">📅 平日夜間対応可</span><span class="a-tag teal">🌍 英語対応</span></div><div class="card-footer"><div></div><div style="display:flex;gap:8px;"><button class="action-btn" onclick="event.stopPropagation()">📋 詳細レポート</button><button class="btn-detail">詳細を見る <span style="color:#aaa;">›</span></button></div></div></div></div>
+    <div class="ambi-card card-good" id="card3" onclick="handleCardClick(event,'s3')">
+      <div class="compare-cb-wrap" id="cbc3"><input type="checkbox" class="compare-cb" data-name="ミナミ青山歯科（佐藤 花子）" data-score="85" data-equipment="笑気麻酔,小児対応設備" onchange="updateCompare()" onclick="event.stopPropagation()"></div>
+      <div class="corner-badge">マッチ度△</div>
+      <div class="ribbon ribbon-good"><p class="ribbon-text">マッチ<br>度<br>良</p></div>
+      <div class="card-body">
+        <div style="font-size:15px;font-weight:700;color:#222;line-height:1.4;margin-bottom:12px;">【南青山】小児歯科・矯正専門 / 子連れ歓迎・平日夜間対応</div>
+        <div class="card-person"><div class="card-av"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div><div><div class="clinic-name">ミナミ青山歯科医院</div><div class="doc-name">佐藤 花子 <span>医師（34歳）</span></div></div></div>
+        <div class="tags"><span class="a-tag">表参道駅から5分</span><span class="a-tag purple">🎓 東京医科歯科大 歯学部卒</span><span class="a-tag blue">🏅 認定医</span><span class="a-tag orange">📅 平日夜間対応可</span><span class="a-tag teal">🌍 英語対応</span></div>
+        <div class="ai-reason-box" id="aiReason3">
+          <div class="ai-reason-hdr"><span class="ai-chip">🤖 AI推薦理由</span></div>
+          <div class="ai-reason-text">小児・矯正の専門性が高く、家族単位での利用に最適です。夜間対応と女性医師の安心感を重視する患者のニーズと一致します。</div>
+          <div class="ai-stat-row">
+            <span class="ai-stat"><span class="num">76%</span>が痛みなしと報告</span>
+            <span class="ai-stat"><span class="num">84%</span>改善率</span>
+            <span class="ai-stat"><span class="num">64</span>件のKYC済み口コミ</span>
+          </div>
+        </div>
+        <div class="card-footer"><div></div><div style="display:flex;gap:8px;"><button class="action-btn" onclick="event.stopPropagation()">📋 詳細レポート</button><button class="btn-detail">詳細を見る <span style="color:#aaa;">›</span></button></div></div>
+      </div>
+    </div>
+
     <div style="text-align:center;padding:14px 0;"><button class="back-btn" onclick="go('s1')"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>検索条件を変更する</button></div>
   </div>
 </div>
 
-<!-- ════════ S3: DETAIL（チラ見せ＋アンロック壁＋KYCモーダル統合版） ════════ -->
+<!-- ② Compare bottom bar -->
+<div class="compare-bar" id="compareBar">
+  <div class="compare-bar-left">比較選択中：<span id="compareCount">0</span> 件</div>
+  <div style="display:flex;gap:8px;">
+    <button class="btn-compare-clear" onclick="clearCompare()">クリア</button>
+    <button class="btn-compare" id="btnCompare" onclick="openCompareModal()" disabled>2件を比較する</button>
+  </div>
+</div>
+
+<!-- ② Compare Modal -->
+<div class="compare-modal-overlay hidden" id="compareModal" onclick="if(event.target===this)closeCompareModal()">
+  <div class="compare-modal">
+    <div class="compare-modal-hdr">
+      <h3>🏥 クリニック比較</h3>
+      <button class="modal-close" onclick="closeCompareModal()">×</button>
+    </div>
+    <div class="compare-tbl-wrap" id="compareTblWrap"></div>
+  </div>
+</div>
+
+<!-- ════════ S3: DETAIL ════════ -->
 <div id="s3" class="hidden">
-  <div class="wrap" style="padding-top:18px;">
+  <div class="wrap" style="padding-top:18px;padding-bottom:80px;">
     <button class="back-btn" onclick="go('s2')"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>検索結果に戻る</button>
     <div class="det-wrap">
+      <!-- ④ Doctor detail header with booking CTAs -->
       <div class="det-hdr">
-        <div><div class="dh-name">山田 太郎<span>医師</span></div><div class="dh-sub">青山デンタルクリニック　|　一般歯科</div></div>
-        <div><div class="dh-score-lbl">総合スコア</div><div class="dh-score">98<span>pt</span></div></div>
+        <div style="flex:1;">
+          <div class="dh-name">山田 太郎<span>医師</span></div>
+          <div class="dh-sub">青山デンタルクリニック　|　一般歯科</div>
+          <!-- ④ Booking buttons in header -->
+          <div class="det-hdr-btns">
+            <button class="btn-consult" onclick="alert('オンライン相談ページに移動します')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              この医師に相談する
+            </button>
+            <button class="btn-call" onclick="alert('電話番号: 03-1234-5678')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13 19.79 19.79 0 0 1 1.61 4.4 2 2 0 0 1 3.6 2.21h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.16 6.16l.65-.93a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 17v-.08z"/></svg>
+              電話する
+            </button>
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <div class="dh-score-lbl">総合スコア</div>
+          <div class="dh-score">98<span>pt</span></div>
+        </div>
       </div>
 
       <!-- ══ 機能3: 360°バーチャル内覧タブ ══ -->
       <div class="vt-tabs">
         <div class="vt-tab active" id="vtTabPhoto" onclick="switchVtTab('photo')">
-          <span>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-            📷 写真ギャラリー
-          </span>
+          <span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>📷 写真ギャラリー</span>
         </div>
         <div class="vt-tab" id="vtTab360" onclick="switchVtTab('360')">
-          <span>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-            🌐 360° Virtual Tour
-          </span>
+          <span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>🌐 360° Virtual Tour</span>
         </div>
       </div>
       <div class="vt-panel" id="vtPanelPhoto">
@@ -551,18 +1229,11 @@ button,input,select,textarea{font-family:inherit;font-size:14px;}
       <div class="vt-panel hidden" id="vtPanel360">
         <div class="vt-360-wrap">
           <div class="vt-360-inner">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!4v1700000000000!6m8!1m7!1sCAoSLEFGMVFpcE9pVnlmZ1JTcEw3c1J3NXVnbVVpZ2lNTlJXN3lONmVLWW1UMXFV!2m2!1d35.672855!2d139.729770!3f0!4f0!5f0.7820865974627469"
-              allowfullscreen=""
-              loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade"
-              title="院内360°ビュー（ストリートビュー）">
-            </iframe>
+            <iframe src="https://www.google.com/maps/embed?pb=!4v1700000000000!6m8!1m7!1sCAoSLEFGMVFpcE9pVnlmZ1JTcEw3c1J3NXVnbVVpZ2lNTlJXN3lONmVLWW1UMXFV!2m2!1d35.672855!2d139.729770!3f0!4f0!5f0.7820865974627469" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="院内360°ビュー"></iframe>
           </div>
           <div class="vt-360-badge">LIVE 360° VIEW</div>
         </div>
       </div>
-      <!-- ／機能3 -->
 
       <div class="det-body">
         <div class="det-grid">
@@ -580,22 +1251,41 @@ button,input,select,textarea{font-family:inherit;font-size:14px;}
               <div class="sc-row"><span class="sc-lbl">先進性（最新治療）</span><div class="sc-r"><div class="sc-bar"><div class="sc-fill" style="width:100%"></div></div><span class="sc-val">10 / 10点</span></div></div>
             </div>
             <div class="ibox"><div class="ibox-t">保有設備・治療法</div><div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:5px;"><span class="a-tag blue">マイクロスコープ</span><span class="a-tag blue">歯科用CT</span><span class="a-tag green">エムドゲイン療法</span><span class="a-tag purple">静脈内鎮静法</span></div></div>
+
+            <!-- ③ Pricing Section -->
+            <div class="price-section">
+              <div class="price-section-title">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2" stroke-linecap="round"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.31-8.86c-1.77-.45-2.34-.94-2.34-1.67 0-.84.79-1.43 2.1-1.43 1.38 0 1.9.66 1.94 1.64h1.71c-.05-1.34-.87-2.57-2.49-2.97V5H10.9v1.69c-1.51.32-2.72 1.3-2.72 2.81 0 1.79 1.49 2.69 3.66 3.21 1.95.46 2.34 1.15 2.34 1.87 0 .53-.39 1.39-2.1 1.39-1.6 0-2.23-.72-2.32-1.64H8.04c.1 1.7 1.36 2.66 2.86 2.97V19h2.34v-1.67c1.52-.29 2.72-1.16 2.73-2.77-.01-2.2-1.9-2.96-3.66-3.42z"/></svg>
+                料金目安
+              </div>
+              <div class="price-table-grid">
+                <div class="price-card insurance">
+                  <div class="price-type">🏥 保険診療</div>
+                  <div class="price-range">¥1,000〜¥5,000</div>
+                  <div class="price-note">初診料込み目安<br>虫歯治療・クリーニング等</div>
+                </div>
+                <div class="price-card oop">
+                  <div class="price-type">💴 自費診療</div>
+                  <div class="price-range">¥30,000〜¥300,000</div>
+                  <div class="price-note">インプラント・セラミック<br>静脈内鎮静 +¥50,000〜</div>
+                </div>
+              </div>
+              <div class="price-disclaimer">※ 料金は2026年4月時点の目安です。実際の費用は診断内容・保険適用可否により異なります。必ず事前にクリニックにご確認ください。消費税込表示。</div>
+            </div>
           </div>
         </div>
 
-        <!-- ══ クチコミセクション（チラ見せ＋アンロック壁） ══ -->
+        <!-- ══ クチコミセクション ══ -->
         <div class="rev-sec">
           <div class="rev-hdr">
             <div class="rev-ttl">患者からのクチコミ <span style="font-size:12px;color:#888;font-weight:400;margin-left:6px;">(全142件)</span></div>
             <button class="btn-post-main" onclick="openKycModal()">✏️ クチコミを投稿</button>
           </div>
 
-          <!-- ══ 機能2: AIクチコミ要約 ══ -->
+          <!-- ══ 機能2: AIクチコミ要約 + ⑨ Analytics Dashboard ══ -->
           <div class="ai-summary-box">
             <div class="ai-summary-header">
-              <div class="ai-summary-icon">
-                <svg viewBox="0 0 24 24"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73A2 2 0 0 1 10 4a2 2 0 0 1 2-2zm-3 9a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm6 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/></svg>
-              </div>
+              <div class="ai-summary-icon"><svg viewBox="0 0 24 24"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73A2 2 0 0 1 10 4a2 2 0 0 1 2-2zm-3 9a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm6 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/></svg></div>
               <span class="ai-summary-title">🤖 AIクチコミ要約</span>
               <span class="ai-summary-badge">142件を分析</span>
             </div>
@@ -608,11 +1298,60 @@ button,input,select,textarea{font-family:inherit;font-size:14px;}
               <span class="a-tag neg-tag-ai">⚠ #待ち時間が長い</span>
               <span class="a-tag neg-tag-ai">⚠ #受付の対応</span>
             </div>
+
+            <!-- ⑨ Analytics Mini-Dashboard -->
+            <div style="margin-top:14px;border-top:1px solid #bae6fd;padding-top:12px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+                <span style="font-size:11px;font-weight:800;color:#0369a1;">📊 患者データ詳細分析</span>
+                <span class="analytics-premium-badge">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1l3.09 6.26L22 8.27l-5 4.87L18.18 20 12 16.77 5.82 20 7 13.14 2 8.27l6.91-1.01z"/></svg>
+                  詳細データ
+                </span>
+              </div>
+              <div class="analytics-grid">
+                <div class="analytics-card">
+                  <div class="analytics-num warn">25分</div>
+                  <div class="analytics-label">平均待ち時間</div>
+                  <div style="display:flex;gap:4px;margin-top:5px;align-items:center;">
+                    <div style="flex:1;background:#F3F4F6;border-radius:2px;height:5px;overflow:hidden;"><div style="width:69%;height:100%;background:#D97706;border-radius:2px;"></div></div>
+                    <div style="width:5px;"></div>
+                    <div style="flex:1;background:#F3F4F6;border-radius:2px;height:5px;overflow:hidden;"><div style="width:50%;height:100%;background:#E5E7EB;border-radius:2px;"></div></div>
+                  </div>
+                </div>
+                <div class="analytics-card">
+                  <div class="analytics-num warn">32%</div>
+                  <div class="analytics-label">自費提案率</div>
+                  <div style="display:flex;gap:4px;margin-top:5px;align-items:center;">
+                    <div style="flex:1;background:#F3F4F6;border-radius:2px;height:5px;overflow:hidden;"><div style="width:89%;height:100%;background:#D97706;border-radius:2px;"></div></div>
+                    <div style="width:5px;"></div>
+                    <div style="flex:1;background:#F3F4F6;border-radius:2px;height:5px;overflow:hidden;"><div style="width:64%;height:100%;background:#E5E7EB;border-radius:2px;"></div></div>
+                  </div>
+                </div>
+                <div class="analytics-card">
+                  <div class="analytics-num" style="font-size:13px;">土曜午前</div>
+                  <div class="analytics-label">最も混雑する時間帯</div>
+                  <div class="analytics-sub" style="font-size:9px;color:#9CA3AF;margin-top:4px;">予約は2週前がベスト</div>
+                </div>
+                <div class="analytics-card">
+                  <div class="analytics-num good">78%</div>
+                  <div class="analytics-label">リピート率</div>
+                  <div style="display:flex;gap:4px;margin-top:5px;align-items:center;">
+                    <div style="flex:1;background:#F3F4F6;border-radius:2px;height:5px;overflow:hidden;"><div style="width:100%;height:100%;background:#059669;border-radius:2px;"></div></div>
+                    <div style="width:5px;"></div>
+                    <div style="flex:1;background:#F3F4F6;border-radius:2px;height:5px;overflow:hidden;"><div style="width:75%;height:100%;background:#E5E7EB;border-radius:2px;"></div></div>
+                  </div>
+                </div>
+              </div>
+              <!-- Legend for bar charts in analytics cards -->
+              <div style="display:flex;gap:12px;margin-top:6px;margin-bottom:4px;">
+                <div style="display:flex;align-items:center;gap:4px;font-size:10px;font-weight:700;color:#374151;"><div style="width:14px;height:4px;border-radius:2px;background:#3B82F6;"></div>当院</div>
+                <div style="display:flex;align-items:center;gap:4px;font-size:10px;font-weight:700;color:#6B7280;"><div style="width:14px;height:4px;border-radius:2px;background:#E5E7EB;"></div>港区平均</div>
+              </div>
+              <div style="font-size:10px;color:#64748b;margin-top:4px;">※ <strong>自費提案率32%</strong>とは：来院患者のうち自費診療を提案された割合（港区平均 36%）。保険診療のみで済んだ方は68%。<strong>リピート率78%</strong>（港区平均 58%）は来院品質の高さを示します。<br>データはKYC済み142件の口コミ・アンケートから算出（2025年10月〜2026年3月）。</div>
+            </div>
           </div>
-          <!-- ／機能2 -->
 
           <div class="rev-list" id="revList">
-            <!-- 新着2件：常に無料で読める -->
             <div class="rev-item new">
               <div class="rev-top"><span class="r-ok">✓ 治療後改善した</span><span class="r-date">2026/03/15</span></div>
               <div class="rev-text">インプラントの相談で行きました。先生の治療技術は素晴らしく、費用についての説明も明朗で安心できました。</div>
@@ -623,7 +1362,6 @@ button,input,select,textarea{font-family:inherit;font-size:14px;}
               <div class="rev-text">虫歯治療で数回通いました。毎回「今日は何を削るか」を事前に説明してくれるので恐怖感がありません。最短で治療を終えてくれました。</div>
             </div>
 
-            <!-- プレミアム情報（アンロック後に表示） -->
             <div id="premiumReviews" class="hidden">
               <div class="rev-item neg" style="margin-top:9px;">
                 <div class="rev-top"><span class="r-ng">△ 改善しなかった・不満</span><span class="r-date">2025/12/10</span></div>
@@ -636,12 +1374,11 @@ button,input,select,textarea{font-family:inherit;font-size:14px;}
               </div>
               <div class="rev-item neg" style="margin-top:9px;">
                 <div class="rev-top"><span class="r-ng">△ 改善しなかった・不満</span><span class="r-date">2025/09/22</span></div>
-                <div class="rev-text">治療自体は問題ないが、毎回受付の態度が冷たく挨拶もない。何度も通うのが辛くなってきた。</div>
+                <div class="rev-text">治療自体は問題ないが、毎回受付の態度が冷たく挨拶もない。</div>
                 <div><span class="neg-tag">受付対応: 不愛想</span></div>
               </div>
             </div>
 
-            <!-- アンロックの壁（未アンロック時のみ） -->
             <div id="unlockWall" class="unlock-wall">
               <div class="unlock-box">
                 <h4>残りクチコミ140件を読む</h4>
@@ -651,12 +1388,42 @@ button,input,select,textarea{font-family:inherit;font-size:14px;}
             </div>
           </div>
         </div>
+      </div><!-- det-body -->
+
+      <!-- ⑧ AI Second Opinion Chat -->
+      <div class="ai-chat-section">
+        <div class="ai-chat-header">
+          <div class="ai-summary-icon"><svg viewBox="0 0 24 24"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73A2 2 0 0 1 10 4a2 2 0 0 1 2-2zm-3 9a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm6 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/></svg></div>
+          <span class="ai-chat-title">AIセカンドオピニオン</span>
+          <span class="ai-chat-badge">Beta</span>
+        </div>
+        <div class="ai-chat-messages" id="chatMessages">
+          <div class="ai-msg bot">
+            <div class="ai-msg-avatar">🤖</div>
+            <div class="ai-msg-bubble">こんにちは！山田先生の診療方針や治療法についてご質問があればお気軽にどうぞ。当院の設備（マイクロスコープ・CT・静脈内鎮静法）についても回答できます。</div>
+          </div>
+        </div>
+        <div class="ai-chat-input-row">
+          <input type="text" class="ai-chat-input" id="chatInput" placeholder="例）静脈内鎮静法の費用は？/ 初診の流れを教えて" onkeydown="if(event.key==='Enter')sendChat()">
+          <button class="btn-chat-send" onclick="sendChat()">送信</button>
+        </div>
+        <div class="ai-chat-disclaimer">⚠ AIの回答は参考情報であり、医療的アドバイスではありません。診断・治療方針は必ず医師にご相談ください。</div>
       </div>
-    </div>
+
+    </div><!-- det-wrap -->
+  </div>
+
+  <!-- ④ Mobile floating booking bar -->
+  <div class="mobile-book-bar show" id="mobileBookBar">
+    <button class="btn-consult-mob" onclick="alert('オンライン相談ページに移動します')">💬 この医師に相談する</button>
+    <button class="btn-call-mob" onclick="alert('電話番号: 03-1234-5678')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13 19.79 19.79 0 0 1 1.61 4.4 2 2 0 0 1 3.6 2.21h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.16 6.16l.65-.93a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 17v-.08z"/></svg>
+      電話
+    </button>
   </div>
 </div>
 
-<!-- ════════ S4: REVIEW（旧・簡易版は残しつつモーダルをメインに） ════════ -->
+<!-- ════════ S4: REVIEW ════════ -->
 <div id="s4" class="hidden">
   <div class="wrap" style="padding-top:18px;">
     <button class="back-btn" onclick="go('s3')"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>医師詳細に戻る</button>
@@ -709,7 +1476,920 @@ button,input,select,textarea{font-family:inherit;font-size:14px;}
   </div>
 </div>
 
-<!-- ════════ KYC & クチコミ投稿モーダル ════════ -->
+<!-- ════════ S7: MY PAGE ════════ -->
+<div id="s7" class="hidden">
+  <div class="mypage-hero">
+    <div class="mypage-avatar">👤</div>
+    <div class="mypage-name">患者A（匿名）</div>
+    <div class="mypage-sub">2026年3月10日 会員登録</div>
+    <div><span class="kyc-pill">✅ KYC認証済み</span></div>
+  </div>
+  <div class="mypage-body">
+    <!-- ⑥ Posted Reviews -->
+    <div class="mp-section">
+      <div class="mp-section-hdr">
+        <div class="mp-section-title"><span class="icon">✏️</span> 投稿したクチコミ</div>
+        <span class="mp-section-count">1件</span>
+      </div>
+      <ul class="mp-list">
+        <li class="mp-item">
+          <div class="mp-item-icon">🦷</div>
+          <div class="mp-item-body">
+            <div class="mp-item-title">青山デンタルクリニック（山田 太郎 医師）</div>
+            <div class="mp-item-sub">投稿日: 2026/03/15 ・ ✓ 治療後改善した</div>
+            <div class="mp-item-sub" style="color:#555;margin-top:2px;">「インプラントの相談で行きました。先生の治療技術は素晴らしく…」</div>
+          </div>
+          <span class="mp-item-badge badge-green">公開中</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- ⑥ Unlocked Doctors (formerly "unlocked-doctor list") -->
+    <div class="mp-section">
+      <div class="mp-section-hdr">
+        <div class="mp-section-title"><span class="icon">🔓</span> 全クチコミを閲覧した医師</div>
+        <span class="mp-section-count">1件</span>
+      </div>
+      <ul class="mp-list">
+        <li class="mp-item">
+          <div class="mp-item-icon" style="background:#f0fdfa;">🏥</div>
+          <div class="mp-item-body">
+            <div class="mp-item-title">山田 太郎 医師 / 青山デンタルクリニック</div>
+            <div class="mp-item-sub">アンロック日: 2026/03/15 ・ 142件の口コミ閲覧可能</div>
+          </div>
+          <button onclick="go('s3')" style="background:none;border:1px solid #7bc5b4;color:#0f766e;border-radius:4px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">詳細を見る</button>
+        </li>
+      </ul>
+    </div>
+
+    <!-- ⑥ Offer History -->
+    <div class="mp-section">
+      <div class="mp-section-hdr">
+        <div class="mp-section-title"><span class="icon">📬</span> オファー履歴</div>
+        <span class="mp-section-count">1件</span>
+      </div>
+      <ul class="mp-list">
+        <li class="mp-item">
+          <div class="mp-item-icon" style="background:#fff7ed;">📨</div>
+          <div class="mp-item-body">
+            <div class="mp-item-title">青山デンタルクリニックからのオファー</div>
+            <div class="mp-item-sub">受信: 2026/03/20 ・ マッチ度 98%</div>
+          </div>
+          <span class="mp-item-badge badge-orange">未返信</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- ⑥ AI Concierge History -->
+    <div class="mp-section">
+      <div class="mp-section-hdr">
+        <div class="mp-section-title"><span class="icon">🤖</span> AIコンシェルジュ履歴</div>
+        <span class="mp-section-count">2件</span>
+      </div>
+      <ul class="mp-list">
+        <li class="mp-item">
+          <div class="mp-item-icon" style="background:#f5f3ff;">💬</div>
+          <div class="mp-item-body">
+            <div class="mp-item-title">「奥歯がズキズキ、痛みに配慮してほしい」</div>
+            <div class="mp-item-sub">相談日: 2026/03/10 ・ 3件の医師候補を提示</div>
+          </div>
+          <span class="mp-item-badge badge-purple">完了</span>
+        </li>
+        <li class="mp-item">
+          <div class="mp-item-icon" style="background:#f5f3ff;">💬</div>
+          <div class="mp-item-body">
+            <div class="mp-item-title">「歯科恐怖症、笑気麻酔対応の医師を探したい」</div>
+            <div class="mp-item-sub">相談日: 2026/02/28 ・ 5件の医師候補を提示</div>
+          </div>
+          <span class="mp-item-badge badge-purple">完了</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- ⑩ Follow-up Schedule (visible after opt-in) -->
+    <div class="mp-section" id="mpFollowupSection">
+      <div class="mp-section-hdr">
+        <div class="mp-section-title"><span class="icon">📅</span> 治療後フォローアップ予定</div>
+        <span class="mp-section-count" style="background:#dbeafe;color:#1e40af;">参加中</span>
+      </div>
+      <div class="mp-followup-card">
+        <div class="mp-followup-title">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0369a1" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          3ヶ月フォローアップ・スケジュール
+        </div>
+        <div style="font-size:11px;color:#0c4a6e;margin-bottom:10px;">青山デンタルクリニック受診（2026/03/15）後の追跡調査</div>
+        <div class="mp-followup-timeline">
+          <div class="mp-ft-item">
+            <div class="mp-ft-dot done">✓</div>
+            <div>
+              <div class="mp-ft-text">受診直後アンケート</div>
+              <div class="mp-ft-date">2026/03/15 ・ 完了</div>
+            </div>
+          </div>
+          <div class="mp-ft-item">
+            <div class="mp-ft-dot">→</div>
+            <div>
+              <div class="mp-ft-text">1ヶ月後フォローアップ調査</div>
+              <div class="mp-ft-date">2026/04/15 ・ 実施予定</div>
+            </div>
+          </div>
+          <div class="mp-ft-item">
+            <div class="mp-ft-dot upcoming">・</div>
+            <div>
+              <div class="mp-ft-text">3ヶ月後フォローアップ調査</div>
+              <div class="mp-ft-date">2026/06/15 ・ 予定</div>
+            </div>
+          </div>
+        </div>
+        <div style="background:#dbeafe;border-radius:4px;padding:8px 10px;margin-top:10px;font-size:11px;color:#1e40af;font-weight:700;">
+          🎁 参加特典：フォローアップ完了で追加の詳細分析データが閲覧可能になります
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;padding:8px 0 0;">
+      <button class="back-btn" onclick="go('s1')"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>トップページに戻る</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ DB: CLINIC DASHBOARD ════════ -->
+<div id="db" class="hidden dashboard-page">
+
+  <!-- Top bar -->
+  <div class="db-topbar">
+    <div class="db-topbar-left">
+      <div class="db-topbar-logo">S</div>
+      <div>
+        <div class="db-topbar-title">青山デンタルクリニック — 院長ダッシュボード</div>
+      </div>
+    </div>
+    <div class="db-topbar-right">
+      <span class="db-top-pill">📅 2026年3月 データ</span>
+      <button class="db-close-btn" onclick="go('s1')">
+        <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        患者サイトに戻る
+      </button>
+    </div>
+  </div>
+
+  <div class="db-layout">
+    <!-- Sidebar navigation -->
+    <nav class="db-sidebar">
+      <div class="db-nav-item active" onclick="showDbPage('page-dashboard')">
+        <span class="db-nav-icon">📊</span> ダッシュボード
+      </div>
+      <div class="db-nav-item" onclick="showDbPage('page-profile')">
+        <span class="db-nav-icon">👤</span> プロフィール
+      </div>
+      <div class="db-nav-item" onclick="showDbPage('page-certs')">
+        <span class="db-nav-icon">🏅</span> 資格・認定
+      </div>
+      <div class="db-nav-item" onclick="showDbPage('page-reviews')">
+        <span class="db-nav-icon">⭐</span> クチコミ管理
+        <span class="db-nav-badge">3</span>
+      </div>
+      <div class="db-nav-item" onclick="showDbPage('page-schedule')">
+        <span class="db-nav-icon">📅</span> スケジュール
+      </div>
+      <div class="db-nav-item" onclick="showDbPage('page-offers')">
+        <span class="db-nav-icon">📬</span> 来院オファー
+        <span class="db-nav-badge">2</span>
+      </div>
+      <div class="db-nav-item" onclick="showDbPage('page-bcp')">
+        <span class="db-nav-icon">🛡</span> BCP支援
+      </div>
+    </nav>
+
+    <!-- Main content -->
+    <div class="db-main">
+
+      <!-- ══ PAGE: DASHBOARD ══ -->
+      <div id="page-dashboard">
+        <div class="db-page-hdr">
+          <div>
+            <div class="db-page-title">パフォーマンス概要</div>
+            <div class="db-page-subtitle">2026年3月1日〜31日 集計（前月比表示）</div>
+          </div>
+          <div class="db-page-actions">
+            <button class="btn-db-secondary">CSV書き出し</button>
+            <button class="btn-db-primary">レポート共有</button>
+          </div>
+        </div>
+
+        <!-- Alert -->
+        <div class="alert-banner warn">
+          <span>⚠️</span>
+          <span>未返信のクチコミが <strong>3件</strong> あります。返信率が低下するとスコアに影響します。</span>
+          <button onclick="showDbPage('page-reviews')" style="margin-left:auto;background:#D97706;color:#fff;border:none;border-radius:4px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">クチコミを確認</button>
+        </div>
+
+        <!-- KPI cards -->
+        <div class="kpi-grid">
+          <div class="kpi-card kv1">
+            <div class="kpi-label">月間ページ閲覧数</div>
+            <div class="kpi-value">2,847<span class="kpi-unit">PV</span></div>
+            <div class="kpi-trend up">↑ +18.4% <span class="kpi-vs">前月比</span></div>
+          </div>
+          <div class="kpi-card kv2">
+            <div class="kpi-label">新規問合せ数</div>
+            <div class="kpi-value">41<span class="kpi-unit">件</span></div>
+            <div class="kpi-trend up">↑ +12.1% <span class="kpi-vs">前月比</span></div>
+          </div>
+          <div class="kpi-card kv3">
+            <div class="kpi-label">来院コンバージョン率</div>
+            <div class="kpi-value">28.5<span class="kpi-unit">%</span></div>
+            <div class="kpi-trend dn">↓ −2.1pt <span class="kpi-vs">前月比</span></div>
+          </div>
+          <div class="kpi-card kv4">
+            <div class="kpi-label">ピアスコア（今月）</div>
+            <div class="kpi-value">98.1<span class="kpi-unit">pt</span></div>
+            <div class="kpi-trend up">↑ +0.3pt <span class="kpi-vs">前月比</span></div>
+          </div>
+        </div>
+
+        <!-- Row 1: Access-conversion trend + Task list -->
+        <div class="db-grid-2">
+
+          <!-- SPEEDA-style monthly trend chart -->
+          <div class="db-card">
+            <div class="db-card-hdr">
+              <div class="db-card-title">
+                <span class="title-dot" style="background:#3B4DB8;"></span>
+                アクセス数・来院コンバージョン　月次推移
+              </div>
+              <div class="db-card-actions">
+                <div class="trend-period-tabs">
+                  <div class="trend-period-tab active">3M</div>
+                  <div class="trend-period-tab">6M</div>
+                  <div class="trend-period-tab">12M</div>
+                </div>
+              </div>
+            </div>
+            <div class="db-card-body">
+              <!-- Legend -->
+              <div class="chart-legend" style="margin-bottom:10px;">
+                <div class="legend-item"><div class="legend-line" style="background:#3B4DB8;"></div>ページ閲覧数（左軸）</div>
+                <div class="legend-item"><div class="legend-line" style="background:#10B981;border-top:2px dashed #10B981;background:none;"></div>来院CV率（右軸）</div>
+              </div>
+              <div class="trend-chart-container">
+                <canvas id="accessChart"></canvas>
+              </div>
+              <!-- Conversion rate explanation -->
+              <div class="conversion-explain">
+                <strong>来院コンバージョン率（28.5%）とは？</strong><br>
+                当月のページ閲覧数（2,847 PV）のうち、実際に来院予約・問合せに至ったユーザーの割合（41件 ÷ 144件の詳細閲覧 ≒ <strong>28.5%</strong>）。「詳細ページを最後まで読んだ患者が、どの程度アクションを起こしたか」を示す指標です。前月（30.6%）より −2.1pt。クチコミへの返信やKYCスコア向上が改善につながります。
+              </div>
+            </div>
+          </div>
+
+          <!-- Task list -->
+          <div class="db-card">
+            <div class="db-card-hdr">
+              <div class="db-card-title"><span class="title-dot" style="background:#F59E0B;"></span>AIが提案する次のアクション</div>
+              <span class="db-tag amber">優先度順</span>
+            </div>
+            <div class="db-card-body">
+              <div class="ai-action-list">
+                <div class="ai-action-item">
+                  <div class="ai-action-icon">💬</div>
+                  <div class="ai-action-body">
+                    <div class="ai-action-title">未返信クチコミ3件に返信する（緊急）</div>
+                    <div class="ai-action-desc">ネガティブ1件を含む未返信が72時間以上経過。返信率は検索順位に直結します。</div>
+                  </div>
+                  <button class="btn-action-do" onclick="showDbPage('page-reviews')">対応する</button>
+                </div>
+                <div class="ai-action-item">
+                  <div class="ai-action-icon">📸</div>
+                  <div class="ai-action-body">
+                    <div class="ai-action-title">院内写真を3枚追加する（推奨）</div>
+                    <div class="ai-action-desc">写真枚数6枚以下のクリニックはCV率が平均 −8.2%。診察室の写真が最も効果的。</div>
+                  </div>
+                  <button class="btn-action-do" onclick="showDbPage('page-profile')">追加する</button>
+                </div>
+                <div class="ai-action-item">
+                  <div class="ai-action-icon">🏅</div>
+                  <div class="ai-action-body">
+                    <div class="ai-action-title">「口腔外科専門医」資格の期限更新</div>
+                    <div class="ai-action-desc">2026/06/30 に有効期限切れ。更新手続きまで90日。早めのフォームを送付推奨。</div>
+                  </div>
+                  <button class="btn-action-do" onclick="showDbPage('page-certs')">確認する</button>
+                </div>
+              </div>
+              <div class="task-list" style="margin-top:12px;border-top:1px solid #F3F4F6;padding-top:10px;">
+                <div class="task-item">
+                  <div class="task-prio high"></div>
+                  <div class="task-body"><div class="task-title">ホットリード患者Bへの来院オファー送信</div><div class="task-due">期限: 2026/04/03</div></div>
+                  <span class="task-badge urgent">緊急</span>
+                </div>
+                <div class="task-item">
+                  <div class="task-prio med"></div>
+                  <div class="task-body"><div class="task-title">4月のキャンペーン設定（インプラント相談会）</div><div class="task-due">期限: 2026/04/10</div></div>
+                  <span class="task-badge normal">通常</span>
+                </div>
+                <div class="task-item">
+                  <div class="task-prio low"></div>
+                  <div class="task-body"><div class="task-title">BCP計画書のレビュー・更新</div><div class="task-due">期限: 2026/04/30</div></div>
+                  <span class="task-badge done">低優先</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 2: Strength/Weakness bars + Competitor matrix -->
+        <div class="db-grid-2">
+          <!-- Clustered bar: strength vs avg -->
+          <div class="db-card">
+            <div class="db-card-hdr">
+              <div class="db-card-title"><span class="title-dot" style="background:#8B5CF6;"></span>強み・弱み分析（港区平均比較）</div>
+              <div class="db-card-actions">
+                <div class="chart-legend">
+                  <div class="legend-item"><div class="legend-sq" style="background:#3B4DB8;"></div>当院</div>
+                  <div class="legend-item"><div class="legend-sq" style="background:#E5E7EB;"></div>港区平均</div>
+                </div>
+              </div>
+            </div>
+            <div class="db-card-body">
+              <div style="height:220px;"><canvas id="strengthChart"></canvas></div>
+            </div>
+          </div>
+
+          <!-- Competitor matrix (scatter) -->
+          <div class="db-card">
+            <div class="db-card-hdr">
+              <div class="db-card-title"><span class="title-dot" style="background:#EF4444;"></span>競合ポジション・マトリクス</div>
+              <span class="db-tag red">Premium</span>
+            </div>
+            <div class="db-card-body" style="position:relative;">
+              <div class="matrix-axis-x">
+                <span>← 技術評価（低）</span>
+                <span>技術評価（高） →</span>
+              </div>
+              <div style="height:200px;position:relative;">
+                <canvas id="matrixChart"></canvas>
+                <div class="matrix-quadrant-labels">
+                  <div class="mql tl">高価格・低技術</div>
+                  <div class="mql tr">高価格・高技術<br>（プレミアム）</div>
+                  <div class="mql bl">低価格・低技術</div>
+                  <div class="mql br">コスパ型</div>
+                </div>
+              </div>
+              <div style="text-align:center;font-size:10px;color:#9CA3AF;margin-top:4px;">↑ 料金帯（高） ↓ 料金帯（低）</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 3: Demand donut + Patient acquisition funnel -->
+        <div class="db-grid-2">
+          <!-- Demand donut chart with legend -->
+          <div class="db-card">
+            <div class="db-card-hdr">
+              <div class="db-card-title"><span class="title-dot" style="background:#F59E0B;"></span>来院患者 診療カテゴリ分布</div>
+              <span class="db-tag amber">今月累計</span>
+            </div>
+            <div class="db-card-body">
+              <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;">
+                <div class="donut-wrap">
+                  <canvas id="demandDonut" width="160" height="160"></canvas>
+                  <div class="donut-center">
+                    <div class="donut-center-num">144</div>
+                    <div class="donut-center-label">来院総数</div>
+                  </div>
+                </div>
+                <div class="donut-legend" style="flex:1;min-width:160px;">
+                  <div class="dl-item">
+                    <div class="legend-sq" style="background:#3B4DB8;width:12px;height:12px;border-radius:2px;flex-shrink:0;"></div>
+                    <span class="dl-name">一般歯科（虫歯）</span>
+                    <div class="dl-bar-wrap"><div class="dl-bar" style="width:38%;background:#3B4DB8;"></div></div>
+                    <span class="dl-pct">38%</span>
+                  </div>
+                  <div class="dl-item">
+                    <div class="legend-sq" style="background:#10B981;width:12px;height:12px;border-radius:2px;flex-shrink:0;"></div>
+                    <span class="dl-name">インプラント</span>
+                    <div class="dl-bar-wrap"><div class="dl-bar" style="width:22%;background:#10B981;"></div></div>
+                    <span class="dl-pct">22%</span>
+                  </div>
+                  <div class="dl-item">
+                    <div class="legend-sq" style="background:#F59E0B;width:12px;height:12px;border-radius:2px;flex-shrink:0;"></div>
+                    <span class="dl-name">歯周病治療</span>
+                    <div class="dl-bar-wrap"><div class="dl-bar" style="width:18%;background:#F59E0B;"></div></div>
+                    <span class="dl-pct">18%</span>
+                  </div>
+                  <div class="dl-item">
+                    <div class="legend-sq" style="background:#8B5CF6;width:12px;height:12px;border-radius:2px;flex-shrink:0;"></div>
+                    <span class="dl-name">審美・ホワイトニング</span>
+                    <div class="dl-bar-wrap"><div class="dl-bar" style="width:13%;background:#8B5CF6;"></div></div>
+                    <span class="dl-pct">13%</span>
+                  </div>
+                  <div class="dl-item">
+                    <div class="legend-sq" style="background:#EF4444;width:12px;height:12px;border-radius:2px;flex-shrink:0;"></div>
+                    <span class="dl-name">定期健診・その他</span>
+                    <div class="dl-bar-wrap"><div class="dl-bar" style="width:9%;background:#EF4444;"></div></div>
+                    <span class="dl-pct">9%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Patient acquisition funnel -->
+          <div class="db-card">
+            <div class="db-card-hdr">
+              <div class="db-card-title"><span class="title-dot" style="background:#10B981;"></span>患者獲得ファネル（今月）</div>
+              <div class="db-card-actions">
+                <!-- Legend for funnel -->
+                <div class="chart-legend">
+                  <div class="legend-item"><div class="legend-sq" style="background:#3B4DB8;"></div>新規</div>
+                  <div class="legend-item"><div class="legend-sq" style="background:#10B981;"></div>リピート</div>
+                </div>
+              </div>
+            </div>
+            <div class="db-card-body">
+              <div class="funnel-wrap">
+                <div class="funnel-row">
+                  <div class="funnel-step-label">ページ閲覧</div>
+                  <div class="funnel-bar-wrap">
+                    <div class="funnel-bar" style="width:100%;background:linear-gradient(90deg,#3B4DB8,#5B8DEF);">
+                      <span class="funnel-label">2,847 PV</span>
+                    </div>
+                  </div>
+                  <div class="funnel-meta"><div class="funnel-num">2,847</div><div class="funnel-pct">100%</div></div>
+                </div>
+                <div style="text-align:center;color:#9CA3AF;font-size:11px;margin:-2px 0 2px 110px;">▼ 5.1% クリック率</div>
+                <div class="funnel-row">
+                  <div class="funnel-step-label">詳細ページ閲覧</div>
+                  <div class="funnel-bar-wrap">
+                    <div class="funnel-bar" style="width:51%;background:linear-gradient(90deg,#1D4ED8,#3B82F6);">
+                      <span class="funnel-label">144件</span>
+                    </div>
+                  </div>
+                  <div class="funnel-meta"><div class="funnel-num">144</div><div class="funnel-pct">5.1%</div></div>
+                </div>
+                <div style="text-align:center;color:#9CA3AF;font-size:11px;margin:-2px 0 2px 110px;">▼ 28.5% CV率（来院予約・問合せ）</div>
+                <div class="funnel-row">
+                  <div class="funnel-step-label">問合せ・予約</div>
+                  <div class="funnel-bar-wrap">
+                    <div class="funnel-bar" style="width:29%;background:linear-gradient(90deg,#059669,#10B981);">
+                      <span class="funnel-label">41件</span>
+                    </div>
+                  </div>
+                  <div class="funnel-meta"><div class="funnel-num">41</div><div class="funnel-pct">1.4%</div></div>
+                </div>
+                <div style="text-align:center;color:#9CA3AF;font-size:11px;margin:-2px 0 2px 110px;">▼ 87.8% 来院率</div>
+                <div class="funnel-row">
+                  <div class="funnel-step-label">実際の来院</div>
+                  <div class="funnel-bar-wrap">
+                    <div class="funnel-bar" style="width:25%;background:linear-gradient(90deg,#047857,#059669);">
+                      <span class="funnel-label">36件</span>
+                    </div>
+                  </div>
+                  <div class="funnel-meta"><div class="funnel-num">36</div><div class="funnel-pct">87.8%</div></div>
+                </div>
+              </div>
+              <div class="conversion-explain" style="margin-top:8px;">
+                <strong>28.5% CV率の意味：</strong>詳細ページを最後まで閲覧した144人のうち41人（28.5%）が実際に問合せ・予約まで進んだことを表します。港区平均は22.1%。クチコミ返信・写真追加で改善可能です。
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 4: Keyword ranking + Churn table -->
+        <div class="db-grid-2">
+          <!-- Top keyword ranking -->
+          <div class="db-card">
+            <div class="db-card-hdr">
+              <div class="db-card-title"><span class="title-dot" style="background:#6366F1;"></span>検索キーワード Top 5</div>
+              <span class="db-tag">今月集計</span>
+            </div>
+            <div class="db-card-body">
+              <div class="kw-list">
+                <div class="kw-item">
+                  <div class="kw-rank r1">1</div>
+                  <div class="kw-word">青山 歯科 痛くない</div>
+                  <div class="kw-bar-wrap"><div class="kw-bar" style="width:100%;"></div></div>
+                  <div class="kw-count">312</div>
+                  <div class="kw-trend up">↑ +41</div>
+                </div>
+                <div class="kw-item">
+                  <div class="kw-rank r2">2</div>
+                  <div class="kw-word">インプラント 青山一丁目</div>
+                  <div class="kw-bar-wrap"><div class="kw-bar" style="width:72%;"></div></div>
+                  <div class="kw-count">225</div>
+                  <div class="kw-trend up">↑ +18</div>
+                </div>
+                <div class="kw-item">
+                  <div class="kw-rank r3">3</div>
+                  <div class="kw-word">歯科恐怖症 静脈鎮静 東京</div>
+                  <div class="kw-bar-wrap"><div class="kw-bar" style="width:58%;"></div></div>
+                  <div class="kw-count">180</div>
+                  <div class="kw-trend up">↑ +32</div>
+                </div>
+                <div class="kw-item">
+                  <div class="kw-rank rn">4</div>
+                  <div class="kw-word">マイクロスコープ 歯科 港区</div>
+                  <div class="kw-bar-wrap"><div class="kw-bar" style="width:42%;"></div></div>
+                  <div class="kw-count">130</div>
+                  <div class="kw-trend fl">→ 横ばい</div>
+                </div>
+                <div class="kw-item">
+                  <div class="kw-rank rn">5</div>
+                  <div class="kw-word">山田太郎 歯科医師</div>
+                  <div class="kw-bar-wrap"><div class="kw-bar" style="width:30%;"></div></div>
+                  <div class="kw-count">94</div>
+                  <div class="kw-trend dn">↓ −7</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Patient churn / risk table -->
+          <div class="db-card">
+            <div class="db-card-hdr">
+              <div class="db-card-title"><span class="title-dot" style="background:#EF4444;"></span>再来院リスク患者（離脱分析）</div>
+              <span class="db-tag red">要フォロー</span>
+            </div>
+            <div class="db-card-body" style="overflow-x:auto;">
+              <table class="churn-table">
+                <thead>
+                  <tr><th>患者ID</th><th>最終来院</th><th>来院間隔</th><th>リスク</th><th>推奨アクション</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>P-4421</td><td>2025/11/02</td><td>150日超</td><td><span class="risk-badge high">高リスク</span></td><td>リマインドメール送信</td></tr>
+                  <tr><td>P-3809</td><td>2025/12/18</td><td>105日</td><td><span class="risk-badge high">高リスク</span></td><td>定期健診案内</td></tr>
+                  <tr><td>P-5102</td><td>2026/01/10</td><td>81日</td><td><span class="risk-badge med">中リスク</span></td><td>フォローアップ電話</td></tr>
+                  <tr><td>P-2214</td><td>2026/01/25</td><td>66日</td><td><span class="risk-badge med">中リスク</span></td><td>次回予約提案</td></tr>
+                  <tr><td>P-6630</td><td>2026/02/20</td><td>41日</td><td><span class="risk-badge low">低リスク</span></td><td>通常フォロー</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 5: Monthly trend area charts (stacked) -->
+        <div class="db-card">
+          <div class="db-card-hdr">
+            <div class="db-card-title"><span class="title-dot" style="background:#10B981;"></span>月次トレンド — 患者数・スコア・クチコミ件数（12ヶ月）</div>
+            <div class="db-card-actions">
+              <!-- LEGEND (shared for all 3 series) -->
+              <div class="chart-legend">
+                <div class="legend-item"><div class="legend-sq" style="background:#3B4DB8;"></div>来院患者数</div>
+                <div class="legend-item"><div class="legend-sq" style="background:#10B981;"></div>ピアスコア</div>
+                <div class="legend-item"><div class="legend-sq" style="background:#F59E0B;"></div>クチコミ件数</div>
+              </div>
+            </div>
+          </div>
+          <div class="db-card-body">
+            <div style="height:240px;"><canvas id="trendMultiChart"></canvas></div>
+          </div>
+        </div>
+
+        <!-- Row 6: Equipment comparison -->
+        <div class="db-card">
+          <div class="db-card-hdr">
+            <div class="db-card-title"><span class="title-dot" style="background:#6366F1;"></span>設備・技術比較（競合クリニック）</div>
+            <div class="db-card-actions">
+              <!-- Legend -->
+              <div class="chart-legend">
+                <div class="legend-item"><span style="background:#EFF6FF;color:#1D4ED8;padding:2px 6px;border-radius:3px;font-size:10px;font-weight:700;">当院</span></div>
+                <div class="legend-item" style="font-size:10px;color:#6B7280;">他院は参考データ</div>
+              </div>
+            </div>
+          </div>
+          <div class="db-card-body" style="overflow-x:auto;">
+            <table class="equip-table">
+              <thead>
+                <tr>
+                  <th>設備・技術</th>
+                  <th class="equip-self">当院</th>
+                  <th>表参道スマイル歯科</th>
+                  <th>ミナミ青山歯科</th>
+                  <th>港区平均</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>マイクロスコープ</td><td class="equip-self"><span class="equip-check">✔</span></td><td><span class="equip-check">✔</span></td><td><span class="equip-cross">—</span></td><td>48%</td></tr>
+                <tr><td>歯科用CT</td><td class="equip-self"><span class="equip-check">✔</span></td><td><span class="equip-cross">—</span></td><td><span class="equip-cross">—</span></td><td>31%</td></tr>
+                <tr><td>静脈内鎮静法</td><td class="equip-self"><span class="equip-check">✔</span></td><td><span class="equip-cross">—</span></td><td><span class="equip-cross">—</span></td><td>12%</td></tr>
+                <tr><td>エムドゲイン療法</td><td class="equip-self"><span class="equip-check">✔</span></td><td><span class="equip-check">✔</span></td><td><span class="equip-cross">—</span></td><td>22%</td></tr>
+                <tr><td>笑気麻酔</td><td class="equip-self"><span class="equip-check">✔</span></td><td><span class="equip-check">✔</span></td><td><span class="equip-check">✔</span></td><td>71%</td></tr>
+                <tr><td>オンライン予約</td><td class="equip-self"><span class="equip-check">✔</span></td><td><span class="equip-check">✔</span></td><td><span class="equip-check">✔</span></td><td>88%</td></tr>
+                <tr><td>英語対応</td><td class="equip-self"><span class="equip-check">✔</span></td><td><span class="equip-cross">—</span></td><td><span class="equip-check">✔</span></td><td>35%</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- /page-dashboard -->
+
+      <!-- ══ PAGE: PROFILE ══ -->
+      <div id="page-profile" class="hidden">
+        <div class="db-page-hdr">
+          <div><div class="db-page-title">プロフィール編集</div><div class="db-page-subtitle">患者に表示される院長情報を管理します</div></div>
+          <div class="db-page-actions"><button class="btn-db-primary">変更を保存</button></div>
+        </div>
+        <div class="db-grid-2">
+          <div class="db-card">
+            <div class="db-card-hdr"><div class="db-card-title"><span class="title-dot" style="background:#3B4DB8;"></span>基本情報</div></div>
+            <div class="db-card-body">
+              <div class="profile-form-grid">
+                <div class="form-group"><label class="form-label">氏名</label><input class="form-input" value="山田 太郎"></div>
+                <div class="form-group"><label class="form-label">生年月日</label><input class="form-input" type="date" value="1984-03-15"></div>
+                <div class="form-group"><label class="form-label">性別</label><select class="form-input"><option>男性</option><option>女性</option></select></div>
+                <div class="form-group"><label class="form-label">医師免許番号</label><input class="form-input" value="第123456号"></div>
+                <div class="form-group"><label class="form-label">メールアドレス</label><input class="form-input" type="email" value="yamada@aoyama-dental.jp"></div>
+                <div class="form-group"><label class="form-label">電話番号</label><input class="form-input" value="03-1234-5678"></div>
+              </div>
+              <div class="form-group" style="margin-top:8px;"><label class="form-label">対応言語</label>
+                <div class="lang-badges">
+                  <span class="lang-badge">🇯🇵 日本語</span>
+                  <span class="lang-badge">🇺🇸 英語</span>
+                  <button style="background:none;border:1px dashed #BFDBFE;border-radius:20px;padding:4px 10px;font-size:11px;color:#1D4ED8;cursor:pointer;">+ 追加</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="db-card">
+            <div class="db-card-hdr"><div class="db-card-title"><span class="title-dot" style="background:#10B981;"></span>プロフィール写真</div></div>
+            <div class="db-card-body">
+              <div class="photo-upload" onclick="alert('写真アップロード（デモ）')">
+                <div style="font-size:42px;margin-bottom:8px;">📷</div>
+                <div style="font-size:13px;font-weight:700;color:#374151;">クリックして写真をアップロード</div>
+                <div style="font-size:11px;color:#9CA3AF;margin-top:4px;">JPG/PNG ・最大5MB ・推奨 400×400px</div>
+              </div>
+              <div style="margin-top:12px;font-size:11px;color:#6B7280;">現在の写真枚数: 6枚（<span style="color:#D97706;font-weight:700;">推奨9枚以上</span>）<br>写真を追加するとCV率が平均 +8.2% 向上します。</div>
+            </div>
+          </div>
+        </div>
+        <div class="db-card">
+          <div class="db-card-hdr"><div class="db-card-title"><span class="title-dot" style="background:#8B5CF6;"></span>学歴・職歴</div><button class="btn-db-secondary">＋ 行を追加</button></div>
+          <div class="db-card-body">
+            <div class="career-list">
+              <div class="career-item"><div class="career-year">2009年3月</div><div class="career-text">東京医科歯科大学 歯学部 卒業</div></div>
+              <div class="career-item"><div class="career-year">2009〜2013</div><div class="career-text">東京大学医学部附属病院 口腔外科 勤務</div></div>
+              <div class="career-item"><div class="career-year">2013〜2018</div><div class="career-text">青山総合歯科医院 副院長</div></div>
+              <div class="career-item"><div class="career-year">2018年〜</div><div class="career-text">青山デンタルクリニック 院長（現職）</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="db-card">
+          <div class="db-card-hdr"><div class="db-card-title"><span class="title-dot" style="background:#F59E0B;"></span>自己紹介文</div><span class="db-tag">患者ページに表示</span></div>
+          <div class="db-card-body">
+            <textarea class="form-textarea" style="min-height:120px;">痛みへの配慮を最優先に、患者様が安心できる治療を心がけています。マイクロスコープを使用した精密な治療と、十分なインフォームドコンセントで、長期的な口腔健康をサポートいたします。</textarea>
+            <div style="display:flex;gap:8px;margin-top:10px;justify-content:flex-end;"><button class="btn-db-secondary">プレビュー</button><button class="btn-db-primary">保存する</button></div>
+          </div>
+        </div>
+      </div><!-- /page-profile -->
+
+      <!-- ══ PAGE: CERTS ══ -->
+      <div id="page-certs" class="hidden">
+        <div class="db-page-hdr">
+          <div><div class="db-page-title">資格・認定証管理</div><div class="db-page-subtitle">資格の有効期限とステータスを管理します</div></div>
+          <div class="db-page-actions"><button class="btn-db-primary">＋ 資格を追加</button></div>
+        </div>
+        <div class="cert-stat-grid">
+          <div class="cert-stat-card"><div class="cert-stat-num" style="color:#059669;">6</div><div class="cert-stat-label">認証済み資格</div></div>
+          <div class="cert-stat-card"><div class="cert-stat-num" style="color:#D97706;">1</div><div class="cert-stat-label">審査中</div></div>
+          <div class="cert-stat-card"><div class="cert-stat-num" style="color:#DC2626;">0</div><div class="cert-stat-label">期限切れ</div></div>
+          <div class="cert-stat-card"><div class="cert-stat-num" style="color:#D97706;">90日</div><div class="cert-stat-label">次の期限まで</div></div>
+        </div>
+        <div class="db-card">
+          <div class="db-card-hdr"><div class="db-card-title"><span class="title-dot" style="background:#3B4DB8;"></span>資格一覧</div></div>
+          <div class="db-card-body" style="overflow-x:auto;">
+            <table class="cert-table">
+              <thead><tr><th>資格名</th><th>認定機関</th><th>取得年</th><th>有効期限</th><th>ステータス</th><th>操作</th></tr></thead>
+              <tbody>
+                <tr><td>歯科医師免許</td><td>厚生労働省</td><td>2009年</td><td>無期限</td><td><span class="status-dot verified">認証済み</span></td><td><button class="btn-db-secondary" style="padding:3px 8px;font-size:10px;">書類表示</button></td></tr>
+                <tr><td>歯周病専門医</td><td>日本歯周病学会</td><td>2015年</td><td>2027/03/31</td><td><span class="status-dot verified">認証済み</span></td><td><button class="btn-db-secondary" style="padding:3px 8px;font-size:10px;">書類表示</button></td></tr>
+                <tr><td>口腔外科専門医</td><td>日本口腔外科学会</td><td>2016年</td><td style="color:#D97706;font-weight:700;">2026/06/30 ⚠</td><td><span class="status-dot verified">認証済み</span></td><td><button class="btn-db-primary" style="padding:3px 8px;font-size:10px;">更新手続き</button></td></tr>
+                <tr><td>歯科麻酔専門医</td><td>日本歯科麻酔学会</td><td>2018年</td><td>2028/12/31</td><td><span class="status-dot verified">認証済み</span></td><td><button class="btn-db-secondary" style="padding:3px 8px;font-size:10px;">書類表示</button></td></tr>
+                <tr><td>インプラント認定医</td><td>日本口腔インプラント学会</td><td>2020年</td><td>2027/09/30</td><td><span class="status-dot verified">認証済み</span></td><td><button class="btn-db-secondary" style="padding:3px 8px;font-size:10px;">書類表示</button></td></tr>
+                <tr><td>指導医（研修）</td><td>日本歯科医師会</td><td>2021年</td><td>2026/12/31</td><td><span class="status-dot pending">審査中</span></td><td><button class="btn-db-secondary" style="padding:3px 8px;font-size:10px;">確認</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="db-card-body" style="padding-top:0;">
+            <div class="cert-upload-area" onclick="alert('証明書アップロード（デモ）')">
+              <div style="font-size:28px;margin-bottom:6px;">📎</div>
+              <div style="font-size:13px;font-weight:700;color:#374151;">資格証明書をアップロード</div>
+              <div style="font-size:11px;color:#9CA3AF;margin-top:4px;">PDF/JPG ・最大10MB ・AIで自動読み取り・登録</div>
+            </div>
+          </div>
+        </div>
+      </div><!-- /page-certs -->
+
+      <!-- ══ PAGE: REVIEWS ══ -->
+      <div id="page-reviews" class="hidden">
+        <div class="db-page-hdr">
+          <div><div class="db-page-title">クチコミ管理</div><div class="db-page-subtitle">AI分析と返信管理</div></div>
+        </div>
+        <div class="db-card" style="margin-bottom:16px;">
+          <div class="db-card-hdr"><div class="db-card-title"><span class="title-dot" style="background:#3B4DB8;"></span>AIクチコミ分析サマリー</div><span class="db-tag blue">142件を分析</span></div>
+          <div class="db-card-body">
+            <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);">
+              <div class="kpi-card kv1" style="border-left:none;border-top:3px solid #3B82F6;padding-top:12px;">
+                <div class="kpi-label">平均評価</div><div class="kpi-value">4.6<span class="kpi-unit">/5</span></div>
+                <div class="kpi-trend up">↑ +0.2 前月比</div>
+              </div>
+              <div class="kpi-card kv2" style="border-left:none;border-top:3px solid #10B981;padding-top:12px;">
+                <div class="kpi-label">返信率</div><div class="kpi-value">78<span class="kpi-unit">%</span></div>
+                <div class="kpi-trend dn">↓ −5pt（3件未返信）</div>
+              </div>
+              <div class="kpi-card kv3" style="border-left:none;border-top:3px solid #F59E0B;padding-top:12px;">
+                <div class="kpi-label">ポジティブ</div><div class="kpi-value">88<span class="kpi-unit">%</span></div>
+                <div class="kpi-trend up">↑ +2pt</div>
+              </div>
+              <div class="kpi-card kv4" style="border-left:none;border-top:3px solid #8B5CF6;padding-top:12px;">
+                <div class="kpi-label">KYC済み</div><div class="kpi-value">67<span class="kpi-unit">%</span></div>
+                <div class="kpi-trend up">↑ +4pt</div>
+              </div>
+            </div>
+            <div style="height:160px;margin-top:12px;"><canvas id="catRadarChart"></canvas></div>
+          </div>
+        </div>
+        <div class="db-card">
+          <div class="db-card-hdr"><div class="db-card-title"><span class="title-dot" style="background:#EF4444;"></span>クチコミ一覧</div></div>
+          <div class="db-card-body">
+            <div class="review-tabs">
+              <div class="rv-tab active">未返信 <span style="background:#EF4444;color:#fff;font-size:9px;padding:1px 5px;border-radius:10px;margin-left:3px;">3</span></div>
+              <div class="rv-tab">すべて</div>
+              <div class="rv-tab">ポジティブ</div>
+              <div class="rv-tab">ネガティブ</div>
+            </div>
+            <div class="rv-card neg">
+              <div class="rv-card-top">
+                <div class="rv-stars">★★★☆☆</div>
+                <div style="display:flex;gap:6px;align-items:center;"><span class="db-tag amber">要返信</span><span class="rv-date">2026/03/28</span></div>
+              </div>
+              <div class="rv-text">設備は綺麗ですが、少しでも虫歯があると高額な自費のインプラントを執拗に勧められました。保険でお願いすると態度が変わった気がします。</div>
+              <div class="rv-ai-suggestion"><div class="rv-ai-label">🤖 AI返信サジェスト</div><div class="rv-ai-text">「ご不快をおかけし大変申し訳ございません。当院では患者様のご希望と経済的状況を最優先に治療計画を立てております。ご指摘の点を院内で共有し、丁寧なご説明に努めてまいります。」</div></div>
+              <div style="display:flex;gap:8px;margin-top:8px;"><button class="btn-reply-prem">🔒 返信する（Premium）</button><button class="btn-reply">サジェストをコピー</button></div>
+            </div>
+            <div class="rv-card">
+              <div class="rv-card-top">
+                <div class="rv-stars">★★★★☆</div>
+                <div style="display:flex;gap:6px;align-items:center;"><span class="db-tag amber">要返信</span><span class="rv-date">2026/03/25</span></div>
+              </div>
+              <div class="rv-text">技術は確かですが、予約したのに毎回30分以上待たされます。時間に余裕がないと厳しいです。</div>
+              <div class="rv-ai-suggestion"><div class="rv-ai-label">🤖 AI返信サジェスト</div><div class="rv-ai-text">「貴重なご意見をありがとうございます。お待たせしてしまい誠に申し訳ございません。待ち時間短縮のためスケジュール管理を見直しております。次回はご不便をおかけしないよう努めます。」</div></div>
+              <button class="btn-reply-prem" style="margin-top:8px;">🔒 返信する（Premium）</button>
+            </div>
+            <div class="rv-card pos">
+              <div class="rv-card-top">
+                <div class="rv-stars">★★★★★</div>
+                <div style="display:flex;gap:6px;align-items:center;"><span class="db-tag amber">要返信</span><span class="rv-date">2026/03/20</span></div>
+              </div>
+              <div class="rv-text">インプラントの相談で行きました。先生の治療技術は素晴らしく、費用の説明も明朗で安心できました。KYC済み認証の評価システムも信頼性が高い。</div>
+              <div class="rv-ai-suggestion"><div class="rv-ai-label">🤖 AI返信サジェスト</div><div class="rv-ai-text">「温かいお言葉をありがとうございます。患者様に安心していただける治療を目指して日々取り組んでおります。またいつでもお気軽にご相談ください。」</div></div>
+              <button class="btn-reply-prem" style="margin-top:8px;">🔒 返信する（Premium）</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- /page-reviews -->
+
+      <!-- ══ PAGE: SCHEDULE ══ -->
+      <div id="page-schedule" class="hidden">
+        <div class="db-page-hdr">
+          <div><div class="db-page-title">診療スケジュール管理</div><div class="db-page-subtitle">週次スケジュールと特別休診の設定</div></div>
+          <div class="db-page-actions"><button class="btn-db-primary">変更を保存</button></div>
+        </div>
+        <div class="db-card">
+          <div class="db-card-hdr"><div class="db-card-title"><span class="title-dot" style="background:#3B4DB8;"></span>週次スケジュール（2026年4月1週）</div>
+            <div class="chart-legend"><div class="legend-item"><div class="legend-sq" style="background:#ECFDF5;border:1px solid #A7F3D0;"></div>診療あり</div><div class="legend-item"><div class="legend-sq" style="background:#F3F4F6;border:1px solid #E5E7EB;"></div>休診</div><div class="legend-item"><div class="legend-sq" style="background:#FFFBEB;border:1px solid #FDE68A;"></div>特別</div></div>
+          </div>
+          <div class="db-card-body">
+            <div class="schedule-grid">
+              <div class="sch-day-hdr">月</div><div class="sch-day-hdr">火</div><div class="sch-day-hdr">水</div><div class="sch-day-hdr">木</div><div class="sch-day-hdr">金</div><div class="sch-day-hdr" style="color:#3B82F6;">土</div><div class="sch-day-hdr" style="color:#EF4444;">日</div>
+              <div class="sch-slot open"><div class="sch-slot-time">10:00-19:00</div><div class="sch-slot-count">残 4枠</div></div>
+              <div class="sch-slot open"><div class="sch-slot-time">10:00-19:00</div><div class="sch-slot-count">残 2枠</div></div>
+              <div class="sch-slot closed"><div class="sch-slot-time">休診</div></div>
+              <div class="sch-slot open"><div class="sch-slot-time">10:00-19:00</div><div class="sch-slot-count">残 6枠</div></div>
+              <div class="sch-slot open"><div class="sch-slot-time">10:00-20:00</div><div class="sch-slot-count">夜間対応</div></div>
+              <div class="sch-slot special"><div class="sch-slot-time">9:00-13:00</div><div class="sch-slot-count">混雑ピーク</div></div>
+              <div class="sch-slot closed"><div class="sch-slot-time">休診</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="db-card">
+          <div class="db-card-hdr"><div class="db-card-title"><span class="title-dot" style="background:#EF4444;"></span>緊急連絡先・休診設定</div></div>
+          <div class="db-card-body">
+            <div class="emergency-form">
+              <div class="form-group"><label class="form-label">緊急連絡先（院長直通）</label><input class="form-input" value="090-XXXX-XXXX"></div>
+              <div class="form-group"><label class="form-label">緊急時の対応クリニック</label><input class="form-input" value="東京大学医学部附属病院 歯科口腔外科"></div>
+            </div>
+            <div style="margin-top:14px;background:#FEF2F2;border:1px solid #FECACA;border-radius:6px;padding:12px;font-size:12px;color:#7F1D1D;">⚠ 休診変更は患者への影響が大きいため、24時間前までの設定を推奨します。</div>
+          </div>
+        </div>
+        <div class="db-card">
+          <div class="db-card-hdr"><div class="db-card-title"><span class="title-dot" style="background:#8B5CF6;"></span>オンライン予約設定 <span class="premium-lock-badge" style="margin-left:8px;">🔒 Premium</span></div></div>
+          <div class="db-card-body">
+            <div style="filter:blur(3px);pointer-events:none;">
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+                <div class="form-group"><label class="form-label">1日最大予約枠数</label><input class="form-input" value="8"></div>
+                <div class="form-group"><label class="form-label">1枠の診療時間（分）</label><input class="form-input" value="60"></div>
+                <div class="form-group"><label class="form-label">リマインド送信</label><select class="form-input"><option>24時間前</option><option>48時間前</option></select></div>
+              </div>
+            </div>
+            <div style="text-align:center;margin-top:12px;"><button class="btn-db-primary">Premiumにアップグレードして設定する</button></div>
+          </div>
+        </div>
+      </div><!-- /page-schedule -->
+
+      <!-- ══ PAGE: OFFERS ══ -->
+      <div id="page-offers" class="hidden">
+        <div class="db-page-hdr">
+          <div><div class="db-page-title">来院オファー・キャンペーン管理</div><div class="db-page-subtitle">患者へのスカウト配信と返信管理</div></div>
+          <div class="db-page-actions"><button class="btn-db-primary">＋ キャンペーン作成</button></div>
+        </div>
+        <div class="offer-stat-grid">
+          <div class="offer-stat-card"><div class="offer-stat-num" style="color:#3B4DB8;">12</div><div class="offer-stat-label">今月配信数</div></div>
+          <div class="offer-stat-card"><div class="offer-stat-num" style="color:#10B981;">3</div><div class="offer-stat-label">来院成立</div></div>
+          <div class="offer-stat-card"><div class="offer-stat-num" style="color:#F59E0B;">25%</div><div class="offer-stat-label">成約率</div></div>
+        </div>
+        <div class="db-card">
+          <div class="db-card-hdr"><div class="db-card-title"><span class="title-dot" style="background:#8B5CF6;"></span>AI自動キャンペーン <span class="premium-lock-badge" style="margin-left:8px;">🔒 Premium</span></div></div>
+          <div class="db-card-body">
+            <div style="filter:blur(2px);pointer-events:none;">
+              <div class="toggle-row"><div><div class="toggle-label">歯科恐怖症患者への静脈鎮静オファー</div><div class="toggle-sub">マッチスコア90以上の患者に自動配信</div></div><div class="toggle-switch"><div class="toggle-track on"><div class="toggle-thumb"></div></div></div></div>
+              <div class="toggle-row"><div><div class="toggle-label">インプラント相談リード獲得</div><div class="toggle-sub">インプラント検索キーワードから来院した患者</div></div><div class="toggle-switch"><div class="toggle-track"><div class="toggle-thumb"></div></div></div></div>
+              <div class="toggle-row"><div><div class="toggle-label">定期健診リマインド自動送信</div><div class="toggle-sub">前回来院から6ヶ月経過した患者</div></div><div class="toggle-switch"><div class="toggle-track on"><div class="toggle-thumb"></div></div></div></div>
+            </div>
+            <div style="text-align:center;margin-top:12px;"><button class="btn-db-primary">Premiumで自動化を有効にする</button></div>
+          </div>
+        </div>
+        <div class="db-card">
+          <div class="db-card-hdr"><div class="db-card-title"><span class="title-dot" style="background:#3B4DB8;"></span>手動キャンペーン一覧</div></div>
+          <div class="db-card-body" style="overflow-x:auto;">
+            <table class="campaign-table">
+              <thead><tr><th>キャンペーン名</th><th>対象</th><th>配信数</th><th>開封率</th><th>ステータス</th></tr></thead>
+              <tbody>
+                <tr><td>4月インプラント無料相談会</td><td>インプラント検索者</td><td>24件</td><td>62%</td><td><span class="db-tag blue">配信中</span></td></tr>
+                <tr><td>歯科恐怖症専門コース</td><td>恐怖症キーワード検索者</td><td>18件</td><td>71%</td><td><span class="db-tag blue">配信中</span></td></tr>
+                <tr><td>3月ホワイトニングキャンペーン</td><td>審美検索者</td><td>32件</td><td>48%</td><td><span class="db-tag">終了</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="db-card">
+          <div class="db-card-hdr"><div class="db-card-title"><span class="title-dot" style="background:#EF4444;"></span>ホットリード（要フォロー）</div></div>
+          <div class="db-card-body">
+            <div class="hot-lead-item">
+              <div class="hot-score s90">95</div>
+              <div class="hot-body">
+                <div class="hot-title">患者B（匿名）— 歯科恐怖症・静脈鎮静希望</div>
+                <div class="hot-sub">スカウト登録: 2026/03/30 ・ 最終アクセス: 本日 ・ マッチ度 95%</div>
+                <div class="hot-ai">🤖 AIが推奨: 「過去の治療トラウマがあります。初回は静脈鎮静の説明を優先し、不安を解消するメッセージを送ることで来院率が2.4倍になります。」</div>
+              </div>
+              <div class="hot-actions">
+                <button class="btn-hot-primary">オファーを送る</button>
+                <button class="btn-hot-secondary">詳細を見る</button>
+              </div>
+            </div>
+            <div class="hot-lead-item">
+              <div class="hot-score s80">82</div>
+              <div class="hot-body">
+                <div class="hot-title">患者C（匿名）— インプラント・短期集中希望</div>
+                <div class="hot-sub">スカウト登録: 2026/03/28 ・ マッチ度 82%</div>
+                <div class="hot-ai">🤖 AIが推奨: 「インプラントの費用への不安が強いと推定されます。分割払いプランと治療スケジュールを明示したオファーが効果的です。」</div>
+              </div>
+              <div class="hot-actions">
+                <button class="btn-hot-primary">オファーを送る</button>
+                <button class="btn-hot-secondary">詳細を見る</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- /page-offers -->
+
+      <!-- ══ PAGE: BCP ══ -->
+      <div id="page-bcp" class="hidden">
+        <div class="db-page-hdr">
+          <div><div class="db-page-title">BCP（事業継続計画）支援</div><div class="db-page-subtitle">災害・緊急時の業務継続を支援します</div></div>
+        </div>
+        <div class="alert-banner info">
+          <span>ℹ️</span>
+          <span>BCP計画書の最終更新から<strong>8ヶ月</strong>が経過しています。年1回以上の見直しを推奨します。</span>
+        </div>
+        <div class="db-card">
+          <div class="db-card-hdr"><div class="db-card-title"><span class="title-dot" style="background:#3B4DB8;"></span>BCP支援サービスとは</div></div>
+          <div class="db-card-body">
+            <div style="font-size:13px;color:#374151;line-height:1.8;margin-bottom:16px;">医者ペディアのBCP支援は、クリニックが災害・感染症拡大・システム障害などの緊急事態に備えた<strong>事業継続計画（Business Continuity Plan）</strong>の策定をサポートします。専門のコンサルタントとAIを活用し、歯科クリニック特化の実効性の高いBCPを作成・管理できます。</div>
+            <div class="bcp-feature-grid">
+              <div class="bcp-feature-card"><div class="bcp-feature-icon">🏥</div><div class="bcp-feature-title">患者データのバックアップ計画</div><div class="bcp-feature-desc">電子カルテ・画像データのクラウドバックアップと復旧手順書を自動生成します。</div></div>
+              <div class="bcp-feature-card"><div class="bcp-feature-icon">📋</div><div class="bcp-feature-title">緊急時対応マニュアル作成</div><div class="bcp-feature-desc">地震・洪水・感染症別の具体的なアクションプランを専門家が監修します。</div></div>
+              <div class="bcp-feature-card"><div class="bcp-feature-icon">🔗</div><div class="bcp-feature-title">連携医療機関の登録管理</div><div class="bcp-feature-desc">休診時の患者紹介先・協力病院ネットワークを管理し、患者への周知を自動化します。</div></div>
+              <div class="bcp-feature-card"><div class="bcp-feature-icon">📱</div><div class="bcp-feature-title">患者への緊急通知システム</div><div class="bcp-feature-desc">休診・移転・緊急情報を登録患者に一斉配信。SNS連携も対応。</div></div>
+              <div class="bcp-feature-card"><div class="bcp-feature-icon">💼</div><div class="bcp-feature-title">スタッフ安否確認</div><div class="bcp-feature-desc">災害時のスタッフ安否確認システムと代替勤務体制の構築をサポートします。</div></div>
+              <div class="bcp-feature-card"><div class="bcp-feature-icon">📊</div><div class="bcp-feature-title">定期的なBCPレビュー</div><div class="bcp-feature-desc">AIが法改正・地域ハザードマップ更新に合わせてBCP計画の改訂を自動提案します。</div></div>
+            </div>
+            <div style="text-align:center;margin-top:20px;"><button class="btn-db-primary" style="padding:14px 40px;font-size:14px;" onclick="alert('BCP支援サービスの申込みフォームに移動します（デモ）')">BCP支援サービスを申し込む</button></div>
+          </div>
+        </div>
+      </div><!-- /page-bcp -->
+
+    </div><!-- /db-main -->
+  </div><!-- /db-layout -->
+</div><!-- /db -->
 <div id="kycModal" class="modal-overlay hidden" onclick="if(event.target===this)closeKycModal()">
   <div class="modal-box">
     <div class="modal-header">
@@ -717,7 +2397,6 @@ button,input,select,textarea{font-family:inherit;font-size:14px;}
       <button class="modal-close" onclick="closeKycModal()">×</button>
     </div>
     <div class="modal-body">
-      <!-- Step 1: KYC -->
       <div style="margin-bottom:28px;">
         <label style="display:block;font-size:13px;font-weight:700;color:#333;margin-bottom:10px;">1. 受診証明のアップロード <span style="color:#ef4444;font-size:11px;">*必須</span></label>
         <div class="upload-area" onclick="alert('デバイスのカメラまたはファイル選択が起動します')">
@@ -731,7 +2410,6 @@ button,input,select,textarea{font-family:inherit;font-size:14px;}
         <input type="text" class="clean-input" placeholder="例：青山デンタルクリニック" required>
       </div>
 
-      <!-- Step 2: 歯科特化ダイナミックアンケート -->
       <div class="survey-box">
         <div class="survey-title">🦷 歯科特化アンケート（AI分析・ダッシュボード連携用）</div>
         <div style="margin-bottom:14px;">
@@ -752,7 +2430,6 @@ button,input,select,textarea{font-family:inherit;font-size:14px;}
         </div>
       </div>
 
-      <!-- Step 3: テキスト評価 -->
       <div style="margin-bottom:14px;">
         <label style="display:block;font-size:13px;font-weight:700;color:#333;margin-bottom:6px;">改善報告選択 <span style="color:#ef4444;font-size:11px;">*必須</span></label>
         <div style="display:flex;gap:20px;">
@@ -765,6 +2442,18 @@ button,input,select,textarea{font-family:inherit;font-size:14px;}
         <textarea id="modalRevText" rows="4" style="width:100%;border:1px solid #e2e8f0;border-radius:4px;padding:11px;font-size:13px;outline:none;background:#f9fafb;resize:vertical;font-family:inherit;" placeholder="良かった点、不満だった点、自費の勧誘など、リアルな事実をご記入ください。"></textarea>
       </div>
       <p class="ai-warn">※【AI自動マスク機能】極端な断定や他院との比較など、不適切な表現は自動で「***」に置換されます。</p>
+
+      <!-- ⑩ Follow-up opt-in -->
+      <div class="followup-optin-box">
+        <label>
+          <input type="checkbox" id="followupOptIn">
+          <div>
+            <div class="followup-optin-title">📅 3ヶ月フォローアップ調査に参加する（任意）</div>
+            <div class="followup-optin-desc">受診から1ヶ月後・3ヶ月後に簡単なアンケートをお送りします。治療の経過を報告いただくことで、より精度の高い医師評価データの構築に貢献できます。</div>
+            <span class="followup-unlock-note">🎁 参加で追加の詳細分析データが閲覧可能に</span>
+          </div>
+        </label>
+      </div>
     </div>
     <div class="modal-footer">
       <button class="btn-modal-submit" onclick="submitKycReview()">クチコミを投稿してすべての評価を見る</button>
@@ -774,11 +2463,116 @@ button,input,select,textarea{font-family:inherit;font-size:14px;}
 
 <script>
 /* ── 画面遷移 ── */
-var SCREENS=['s1','s2','s3','s4','s5','s6'];
-function go(id){SCREENS.forEach(function(s){document.getElementById(s).classList.add('hidden');});document.getElementById(id).classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'});if(id==='s3')drawRadar();}
-function scrollToAward(){SCREENS.forEach(function(s){document.getElementById(s).classList.add('hidden');});document.getElementById('s1').classList.remove('hidden');setTimeout(function(){var el=document.getElementById('award-section');if(el)el.scrollIntoView({behavior:'smooth'});},80);}
-function toggleAdv(){var p=document.getElementById('advPanel'),ic=document.getElementById('advIcon'),btn=document.getElementById('advToggle');if(p.classList.contains('hidden')){p.classList.remove('hidden');ic.textContent='－';btn.style.color='#7CB4CC';}else{p.classList.add('hidden');ic.textContent='＋';btn.style.color='';}}
+var SCREENS=['s1','s2','s3','s4','s5','s6','s7','db'];
+var isAiConsult=false;
+
+function go(id){
+  SCREENS.forEach(function(s){document.getElementById(s).classList.add('hidden');});
+  document.getElementById(id).classList.remove('hidden');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='s3'){
+    drawRadar();
+    document.getElementById('mobileBookBar').classList.add('show');
+  } else {
+    var bar=document.getElementById('mobileBookBar');
+    if(bar) bar.classList.remove('show');
+  }
+  if(id==='s2' && isAiConsult){
+    showAiReasons();
+  }
+  if(id==='db'){
+    setTimeout(initDashboardCharts, 80);
+  }
+}
+
+function scrollToAward(){
+  SCREENS.forEach(function(s){document.getElementById(s).classList.add('hidden');});
+  document.getElementById('s1').classList.remove('hidden');
+  setTimeout(function(){var el=document.getElementById('award-section');if(el)el.scrollIntoView({behavior:'smooth'});},80);
+}
+function toggleAdv(){
+  var p=document.getElementById('advPanel'),ic=document.getElementById('advIcon'),btn=document.getElementById('advToggle');
+  if(p.classList.contains('hidden')){p.classList.remove('hidden');ic.textContent='－';btn.style.color='#7CB4CC';}
+  else{p.classList.add('hidden');ic.textContent='＋';btn.style.color='';}
+}
 function setSkewTab(el){document.querySelectorAll('.skew-tab').forEach(function(t){t.classList.remove('active');});el.classList.add('active');}
+
+/* ── ⑦ AI Reasons ── */
+function showAiReasons(){
+  ['aiReason1','aiReason2','aiReason3'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el) el.classList.add('show');
+  });
+}
+
+/* ── ② Compare feature ── */
+var compareModeOn=false;
+var selectedCards=[];
+
+function toggleCompareMode(){
+  compareModeOn=!compareModeOn;
+  var btn=document.getElementById('compareToggle');
+  btn.classList.toggle('active',compareModeOn);
+  document.querySelectorAll('.compare-cb-wrap').forEach(function(el){
+    el.classList.toggle('visible',compareModeOn);
+  });
+  if(!compareModeOn){clearCompare();}
+}
+
+function handleCardClick(event,target){
+  if(compareModeOn) return;
+  go(target);
+}
+
+function updateCompare(){
+  selectedCards=[];
+  document.querySelectorAll('.compare-cb:checked').forEach(function(cb){
+    selectedCards.push({
+      name: cb.dataset.name,
+      score: parseInt(cb.dataset.score),
+      equipment: cb.dataset.equipment
+    });
+  });
+  var count=selectedCards.length;
+  document.getElementById('compareCount').textContent=count;
+  var bar=document.getElementById('compareBar');
+  bar.classList.toggle('visible',count>0);
+  var btn=document.getElementById('btnCompare');
+  btn.disabled=count!==2;
+  btn.textContent=count===2?'2件を比較する':(count+' 件選択中（2件選択してください）');
+}
+
+function clearCompare(){
+  document.querySelectorAll('.compare-cb').forEach(function(cb){cb.checked=false;});
+  selectedCards=[];
+  document.getElementById('compareCount').textContent='0';
+  document.getElementById('compareBar').classList.remove('visible');
+}
+
+function openCompareModal(){
+  if(selectedCards.length!==2) return;
+  var a=selectedCards[0],b=selectedCards[1];
+  var trends=[
+    {label:'総合スコア',a:'<div class="ct-score">'+a.score+'</div>',b:'<div class="ct-score">'+b.score+'</div>'},
+    {label:'KYC口コミ数',a:'142件',b:'96件'},
+    {label:'改善率',a:'<span class="trend-up">95%</span>',b:'<span class="trend-up">88%</span>'},
+    {label:'平均待ち時間',a:'25分',b:'18分'},
+    {label:'リピート率',a:'<span class="trend-up">78%</span>',b:'<span class="trend-up">65%</span>'},
+    {label:'自費提案率',a:'32%',b:'22%'},
+    {label:'保有設備',a:a.equipment.replace(/,/g,'<br>'),b:b.equipment.replace(/,/g,'<br>')},
+    {label:'クチコミトレンド',a:'<span class="trend-up">↑ 上昇傾向</span>',b:'<span style="color:#6b7280;">→ 横ばい</span>'}
+  ];
+  var rows=trends.map(function(r){
+    return '<tr><td class="row-lbl">'+r.label+'</td><td>'+r.a+'</td><td>'+r.b+'</td></tr>';
+  }).join('');
+  document.getElementById('compareTblWrap').innerHTML=
+    '<table class="compare-tbl"><thead><tr><th>比較項目</th><th>'+a.name+'</th><th>'+b.name+'</th></tr></thead><tbody>'+rows+'</tbody></table>';
+  document.getElementById('compareModal').classList.remove('hidden');
+}
+
+function closeCompareModal(){
+  document.getElementById('compareModal').classList.add('hidden');
+}
 
 /* ── レーダーチャート ── */
 var radarDone=false;
@@ -794,10 +2588,10 @@ function drawRadar(){
   defs.appendChild(gr);svg.appendChild(defs);
   [20,40,60,80,100].forEach(function(p){var ps=[];for(var i=0;i<N;i++){var pp=pt(p,i);ps.push(pp.x+','+pp.y);}var el=document.createElementNS(NS,'polygon');el.setAttribute('points',ps.join(' '));el.setAttribute('fill','none');el.setAttribute('stroke',p===100?'#d0d0d0':'#e8e8e8');el.setAttribute('stroke-width',p===100?'1.5':'1');svg.appendChild(el);});
   for(var i=0;i<N;i++){var op=pt(100,i),ln=document.createElementNS(NS,'line');ln.setAttribute('x1',CX);ln.setAttribute('y1',CY);ln.setAttribute('x2',op.x);ln.setAttribute('y2',op.y);ln.setAttribute('stroke','#e8e8e8');ln.setAttribute('stroke-width','1');svg.appendChild(ln);}
-  var dpts=[];for(var i=0;i<N;i++){var dp=pt(vals[i],i);dpts.push(dp.x+','+dp.y);}
+  var dpts=[];for(var j=0;j<N;j++){var dp=pt(vals[j],j);dpts.push(dp.x+','+dp.y);}
   var poly=document.createElementNS(NS,'polygon');poly.setAttribute('points',dpts.join(' '));poly.setAttribute('fill','rgba(155,136,193,0.15)');poly.setAttribute('stroke','url(#rg)');poly.setAttribute('stroke-width','2.5');poly.setAttribute('stroke-linejoin','round');svg.appendChild(poly);
-  for(var i=0;i<N;i++){var p=pt(vals[i],i),dot=document.createElementNS(NS,'circle');dot.setAttribute('cx',p.x);dot.setAttribute('cy',p.y);dot.setAttribute('r','3.5');dot.setAttribute('fill','#555');dot.setAttribute('stroke','white');dot.setAttribute('stroke-width','1.5');svg.appendChild(dot);var vt=document.createElementNS(NS,'text'),ox=p.x>CX?7:-7,oy=p.y>CY?12:-4;vt.setAttribute('x',p.x+ox);vt.setAttribute('y',p.y+oy);vt.setAttribute('text-anchor',p.x>CX?'start':'end');vt.setAttribute('font-size','9');vt.setAttribute('font-weight','700');vt.setAttribute('fill','#9b88c1');vt.setAttribute('font-family','Helvetica Neue,Arial,sans-serif');vt.textContent=vals[i]+'%';svg.appendChild(vt);}
-  for(var i=0;i<N;i++){var lp=pt(100*(LR/R),i),lt=document.createElementNS(NS,'text');lt.setAttribute('x',lp.x);lt.setAttribute('y',lp.y+4);lt.setAttribute('text-anchor','middle');lt.setAttribute('font-size','11');lt.setAttribute('font-weight','700');lt.setAttribute('fill','#444');lt.setAttribute('font-family','Hiragino Kaku Gothic ProN,Meiryo,sans-serif');lt.textContent=labels[i];svg.appendChild(lt);}
+  for(var k=0;k<N;k++){var pp2=pt(vals[k],k),dot=document.createElementNS(NS,'circle');dot.setAttribute('cx',pp2.x);dot.setAttribute('cy',pp2.y);dot.setAttribute('r','3.5');dot.setAttribute('fill','#555');dot.setAttribute('stroke','white');dot.setAttribute('stroke-width','1.5');svg.appendChild(dot);var vt=document.createElementNS(NS,'text'),ox=pp2.x>CX?7:-7,oy=pp2.y>CY?12:-4;vt.setAttribute('x',pp2.x+ox);vt.setAttribute('y',pp2.y+oy);vt.setAttribute('text-anchor',pp2.x>CX?'start':'end');vt.setAttribute('font-size','9');vt.setAttribute('font-weight','700');vt.setAttribute('fill','#9b88c1');vt.setAttribute('font-family','Helvetica Neue,Arial,sans-serif');vt.textContent=vals[k]+'%';svg.appendChild(vt);}
+  for(var m=0;m<N;m++){var lp=pt(100*(LR/R),m),lt=document.createElementNS(NS,'text');lt.setAttribute('x',lp.x);lt.setAttribute('y',lp.y+4);lt.setAttribute('text-anchor','middle');lt.setAttribute('font-size','11');lt.setAttribute('font-weight','700');lt.setAttribute('fill','#444');lt.setAttribute('font-family','Hiragino Kaku Gothic ProN,Meiryo,sans-serif');lt.textContent=labels[m];svg.appendChild(lt);}
 }
 
 /* ── S4 旧レビュー投稿 ── */
@@ -829,8 +2623,12 @@ function submitKycReview(){
   var masked=raw.replace(NG,'***');
   var status=document.querySelector('input[name="modalStatus"]:checked').value;
   var good=status==='改善した',today=new Date().toLocaleDateString('ja-JP');
+  var followupChecked=document.getElementById('followupOptIn').checked;
 
-  alert('受診証明とクチコミの投稿が完了しました!\nすべてのプレミアム情報（ネガティブ評価含む）がアンロックされました。'+(masked!==raw?'\n※不適切な表現は自動変換されました。':''));
+  var msg='受診証明とクチコミの投稿が完了しました!\nすべてのプレミアム情報（ネガティブ評価含む）がアンロックされました。';
+  if(followupChecked) msg+='\n\n✅ フォローアップ調査への参加が登録されました！\nマイページで調査スケジュールを確認できます。';
+  if(masked!==raw) msg+='\n\n※不適切な表現は自動変換されました。';
+  alert(msg);
 
   /* ユーザーの新規投稿を先頭に追加 */
   var div=document.createElement('div');div.className='rev-item new';div.style.marginTop='9px';
@@ -838,11 +2636,16 @@ function submitKycReview(){
   var firstItem=document.getElementById('revList').querySelector('.rev-item');
   if(firstItem)document.getElementById('revList').insertBefore(div,firstItem);
 
-  /* アンロック：壁を消し、プレミアム情報を表示 */
+  /* アンロック */
   document.getElementById('unlockWall').classList.add('hidden');
   var premium=document.getElementById('premiumReviews');
   premium.classList.remove('hidden');
   premium.style.animation='fadeIn 0.4s ease-out';
+
+  /* ⑩ Show followup section in MyPage */
+  if(followupChecked){
+    document.getElementById('mpFollowupSection').style.border='2px solid #0ea5e9';
+  }
 
   closeKycModal();
   document.getElementById('modalRevText').value='';
@@ -871,6 +2674,7 @@ function runAiConsult(){
   setTimeout(function(){
     loading.classList.add('hidden');
     sendBtn.disabled=false;
+    isAiConsult=true;
     go('s2');
   },1500);
 }
@@ -882,16 +2686,312 @@ function switchVtTab(tab){
   var panelPhoto=document.getElementById('vtPanelPhoto');
   var panel360=document.getElementById('vtPanel360');
   if(tab==='photo'){
-    photoTab.classList.add('active');
-    tab360.classList.remove('active');
-    panelPhoto.classList.remove('hidden');
-    panel360.classList.add('hidden');
+    photoTab.classList.add('active');tab360.classList.remove('active');
+    panelPhoto.classList.remove('hidden');panel360.classList.add('hidden');
   } else {
-    tab360.classList.add('active');
-    photoTab.classList.remove('active');
-    panel360.classList.remove('hidden');
-    panelPhoto.classList.add('hidden');
+    tab360.classList.add('active');photoTab.classList.remove('active');
+    panel360.classList.remove('hidden');panelPhoto.classList.add('hidden');
   }
+}
+
+/* ── ⑧ AI Second Opinion Chat ── */
+var chatDummyAnswers=[
+  '静脈内鎮静法の費用は一般的に50,000〜80,000円程度（自費）です。山田先生のクリニックでは術前カウンセリング込みでご案内しています。保険診療は対象外となります。',
+  '初診の流れは①問診票記入（10分）②レントゲン・CT撮影（15分）③担当医との診断説明・治療計画（20〜30分）となっています。初診当日に処置は行わず、十分な説明を優先しています。',
+  'マイクロスコープを使用することで、肉眼では見えない細部の虫歯や神経の状態を精密に確認できます。山田先生はマイクロスコープ使用率ほぼ100%で、精度の高い治療を提供しています。',
+  '歯科恐怖症の方には笑気麻酔（軽い鎮静、+10,000〜20,000円）または静脈内鎮静法（深い鎮静、+50,000〜80,000円）の選択肢をご用意しています。程度に応じて相談できます。',
+  '予約は電話またはウェブから可能です。土曜の午前は混雑するため、平日午後（14〜17時）または水曜が比較的空いています。初診は1〜2週間先まで予約が入っていることが多いです。'
+];
+var chatCount=0;
+
+function sendChat(){
+  var input=document.getElementById('chatInput');
+  var msg=input.value.trim();
+  if(!msg) return;
+  var msgs=document.getElementById('chatMessages');
+
+  /* User message */
+  var userDiv=document.createElement('div');
+  userDiv.className='ai-msg user';
+  userDiv.innerHTML='<div class="ai-msg-avatar">👤</div><div class="ai-msg-bubble">'+escapeHtml(msg)+'</div>';
+  msgs.appendChild(userDiv);
+  input.value='';
+
+  /* Typing indicator */
+  var typingDiv=document.createElement('div');
+  typingDiv.className='ai-msg bot';
+  typingDiv.innerHTML='<div class="ai-msg-avatar">🤖</div><div class="ai-chat-typing"><div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div></div>';
+  msgs.appendChild(typingDiv);
+  msgs.scrollTop=msgs.scrollHeight;
+
+  setTimeout(function(){
+    typingDiv.remove();
+    var answer=chatDummyAnswers[chatCount % chatDummyAnswers.length];
+    chatCount++;
+    var botDiv=document.createElement('div');
+    botDiv.className='ai-msg bot';
+    botDiv.innerHTML='<div class="ai-msg-avatar">🤖</div><div class="ai-msg-bubble">'+answer+'</div>';
+    msgs.appendChild(botDiv);
+    msgs.scrollTop=msgs.scrollHeight;
+  },1500);
+}
+
+function escapeHtml(t){
+  var d=document.createElement('div');d.appendChild(document.createTextNode(t));return d.innerHTML;
+}
+
+/* ══ DASHBOARD NAVIGATION ══ */
+var DB_PAGES=['page-dashboard','page-profile','page-certs','page-reviews','page-schedule','page-offers','page-bcp'];
+var dbChartsInit=false;
+
+function showDbPage(id){
+  DB_PAGES.forEach(function(p){
+    var el=document.getElementById(p);
+    if(el) el.classList.add('hidden');
+  });
+  var target=document.getElementById(id);
+  if(target) target.classList.remove('hidden');
+
+  // Update nav active state
+  document.querySelectorAll('.db-nav-item').forEach(function(item,i){
+    item.classList.toggle('active', item.getAttribute('onclick')==="showDbPage('"+id+"')");
+  });
+
+  if(id==='page-dashboard' && !dbChartsInit){
+    setTimeout(initDashboardCharts,100);
+  }
+}
+
+/* ══ DASHBOARD CHART INITIALISATION ══ */
+var dbChartsMap={};
+
+function destroyChart(id){
+  if(dbChartsMap[id]){dbChartsMap[id].destroy();delete dbChartsMap[id];}
+}
+
+function initDashboardCharts(){
+  if(dbChartsInit) return;
+  dbChartsInit=true;
+
+  /* 1. Access + Conversion trend (dual-axis area chart) */
+  destroyChart('accessChart');
+  var actx=document.getElementById('accessChart');
+  if(actx){
+    var months=['10月','11月','12月','1月','2月','3月'];
+    var pvData=[1820,2050,1980,2210,2410,2847];
+    var cvData=[24.2,26.8,25.1,28.0,30.6,28.5];
+    var aGrad=actx.getContext('2d').createLinearGradient(0,0,0,200);
+    aGrad.addColorStop(0,'rgba(59,77,184,0.22)');
+    aGrad.addColorStop(1,'rgba(59,77,184,0)');
+    dbChartsMap['accessChart']=new Chart(actx,{
+      type:'bar',
+      data:{
+        labels:months,
+        datasets:[
+          {
+            label:'ページ閲覧数',type:'bar',
+            data:pvData,
+            backgroundColor:'rgba(59,77,184,0.18)',
+            borderColor:'rgba(59,77,184,0.6)',
+            borderWidth:1,
+            borderRadius:4,
+            yAxisID:'y'
+          },
+          {
+            label:'来院CV率(%)',type:'line',
+            data:cvData,
+            borderColor:'#10B981',
+            backgroundColor:'rgba(16,185,129,0.08)',
+            borderWidth:2.5,
+            pointRadius:4,
+            pointBackgroundColor:'#10B981',
+            tension:0.4,
+            fill:true,
+            yAxisID:'y2',
+            borderDash:[5,3]
+          }
+        ]
+      },
+      options:{
+        responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false}},
+        scales:{
+          y:{position:'left',grid:{color:'#F3F4F6'},ticks:{color:'#9CA3AF',font:{size:10}},title:{display:true,text:'PV',color:'#9CA3AF',font:{size:10}}},
+          y2:{position:'right',grid:{drawOnChartArea:false},ticks:{color:'#10B981',font:{size:10},callback:function(v){return v+'%';}},min:0,max:40,title:{display:true,text:'CV率',color:'#10B981',font:{size:10}}},
+          x:{grid:{display:false},ticks:{color:'#9CA3AF',font:{size:10}}}
+        }
+      }
+    });
+  }
+
+  /* 2. Strength/Weakness clustered bar */
+  destroyChart('strengthChart');
+  var sctx=document.getElementById('strengthChart');
+  if(sctx){
+    dbChartsMap['strengthChart']=new Chart(sctx,{
+      type:'bar',
+      data:{
+        labels:['専門性','経歴','患者満足度','設備充実度','先進性','返信速度'],
+        datasets:[
+          {label:'当院',data:[98,97,93,100,98,72],backgroundColor:'#3B4DB8',borderRadius:4,barPercentage:0.45},
+          {label:'港区平均',data:[82,78,80,71,65,86],backgroundColor:'#E5E7EB',borderRadius:4,barPercentage:0.45}
+        ]
+      },
+      options:{
+        responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false}},
+        scales:{
+          y:{max:100,grid:{color:'#F3F4F6'},ticks:{color:'#9CA3AF',font:{size:10}},beginAtZero:true},
+          x:{grid:{display:false},ticks:{color:'#374151',font:{size:10}}}
+        },
+        indexAxis:'y'
+      }
+    });
+  }
+
+  /* 3. Competitor matrix (bubble/scatter) */
+  destroyChart('matrixChart');
+  var mctx=document.getElementById('matrixChart');
+  if(mctx){
+    dbChartsMap['matrixChart']=new Chart(mctx,{
+      type:'bubble',
+      data:{
+        datasets:[
+          {label:'当院',data:[{x:92,y:88,r:18}],backgroundColor:'rgba(59,77,184,0.85)',borderColor:'#3B4DB8',borderWidth:2},
+          {label:'表参道スマイル歯科',data:[{x:78,y:72,r:12}],backgroundColor:'rgba(16,185,129,0.7)',borderColor:'#10B981',borderWidth:2},
+          {label:'ミナミ青山歯科',data:[{x:62,y:42,r:10}],backgroundColor:'rgba(245,158,11,0.7)',borderColor:'#F59E0B',borderWidth:2},
+          {label:'港区クリニックA',data:[{x:85,y:58,r:9}],backgroundColor:'rgba(239,68,68,0.6)',borderColor:'#EF4444',borderWidth:2},
+          {label:'港区クリニックB',data:[{x:45,y:35,r:8}],backgroundColor:'rgba(139,92,246,0.6)',borderColor:'#8B5CF6',borderWidth:2}
+        ]
+      },
+      options:{
+        responsive:true,maintainAspectRatio:false,
+        plugins:{
+          legend:{display:true,position:'bottom',labels:{font:{size:9},boxWidth:8,padding:8}},
+          tooltip:{callbacks:{label:function(ctx){return ctx.dataset.label;}}}
+        },
+        scales:{
+          x:{min:30,max:100,title:{display:true,text:'技術評価スコア',color:'#9CA3AF',font:{size:10}},grid:{color:'#F3F4F6'},ticks:{color:'#9CA3AF',font:{size:9}}},
+          y:{min:20,max:100,title:{display:true,text:'料金帯',color:'#9CA3AF',font:{size:10}},grid:{color:'#F3F4F6'},ticks:{color:'#9CA3AF',font:{size:9}}}
+        }
+      }
+    });
+  }
+
+  /* 4. Demand donut */
+  destroyChart('demandDonut');
+  var ddctx=document.getElementById('demandDonut');
+  if(ddctx){
+    dbChartsMap['demandDonut']=new Chart(ddctx,{
+      type:'doughnut',
+      data:{
+        labels:['一般歯科','インプラント','歯周病','審美','その他'],
+        datasets:[{
+          data:[38,22,18,13,9],
+          backgroundColor:['#3B4DB8','#10B981','#F59E0B','#8B5CF6','#EF4444'],
+          borderWidth:2,
+          borderColor:'#fff',
+          hoverOffset:6
+        }]
+      },
+      options:{
+        responsive:false,
+        cutout:'70%',
+        plugins:{
+          legend:{display:false},
+          tooltip:{callbacks:{label:function(ctx){return ctx.label+': '+ctx.parsed+'%';}}}
+        }
+      }
+    });
+  }
+
+  /* 5. Multi-series monthly trend (12M) */
+  destroyChart('trendMultiChart');
+  var tmctx=document.getElementById('trendMultiChart');
+  if(tmctx){
+    var m12=['4月','5月','6月','7月','8月','9月','10月','11月','12月','1月','2月','3月'];
+    var visits=[98,102,95,108,115,121,128,132,119,138,141,144];
+    var scores=[96.8,97.0,97.1,97.2,97.4,97.5,97.6,97.7,97.8,97.9,98.0,98.1];
+    var reviews=[8,9,7,11,10,13,14,15,12,16,14,17];
+    dbChartsMap['trendMultiChart']=new Chart(tmctx,{
+      type:'line',
+      data:{
+        labels:m12,
+        datasets:[
+          {
+            label:'来院患者数',data:visits,
+            borderColor:'#3B4DB8',backgroundColor:'rgba(59,77,184,0.08)',
+            borderWidth:2.5,pointRadius:3,fill:true,tension:0.4,yAxisID:'yv'
+          },
+          {
+            label:'ピアスコア',data:scores,
+            borderColor:'#10B981',backgroundColor:'rgba(16,185,129,0.04)',
+            borderWidth:2,pointRadius:3,fill:false,tension:0.4,yAxisID:'ys'
+          },
+          {
+            label:'クチコミ件数',data:reviews,type:'bar',
+            backgroundColor:'rgba(245,158,11,0.25)',borderColor:'#F59E0B',
+            borderWidth:1,borderRadius:3,yAxisID:'yr'
+          }
+        ]
+      },
+      options:{
+        responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false}},
+        scales:{
+          yv:{position:'left',grid:{color:'#F3F4F6'},ticks:{color:'#3B4DB8',font:{size:10}},title:{display:true,text:'患者数',color:'#3B4DB8',font:{size:10}}},
+          ys:{position:'right',grid:{drawOnChartArea:false},ticks:{color:'#10B981',font:{size:10}},min:94,max:100,title:{display:true,text:'スコア',color:'#10B981',font:{size:10}}},
+          yr:{position:'right',grid:{drawOnChartArea:false},ticks:{color:'#F59E0B',font:{size:10}},title:{display:true,text:'件数',color:'#F59E0B',font:{size:10}}},
+          x:{grid:{display:false},ticks:{color:'#9CA3AF',font:{size:10}}}
+        }
+      }
+    });
+  }
+
+  /* 6. Review category radar */
+  destroyChart('catRadarChart');
+  var rrctx=document.getElementById('catRadarChart');
+  if(rrctx){
+    dbChartsMap['catRadarChart']=new Chart(rrctx,{
+      type:'radar',
+      data:{
+        labels:['痛みへの配慮','説明の丁寧さ','待ち時間','受付対応','設備・清潔感','料金の明朗さ'],
+        datasets:[
+          {label:'当院(平均)',data:[88,92,62,68,95,78],borderColor:'#3B4DB8',backgroundColor:'rgba(59,77,184,0.12)',borderWidth:2,pointRadius:3},
+          {label:'港区平均',data:[74,76,72,78,80,75],borderColor:'#E5E7EB',backgroundColor:'rgba(0,0,0,0)',borderWidth:1.5,pointRadius:2,borderDash:[4,4]}
+        ]
+      },
+      options:{
+        responsive:true,maintainAspectRatio:false,
+        plugins:{
+          legend:{display:true,position:'bottom',labels:{font:{size:9},boxWidth:8,padding:8}},
+          tooltip:{callbacks:{label:function(ctx){return ctx.dataset.label+': '+ctx.raw+'点';}}}
+        },
+        scales:{
+          r:{min:0,max:100,ticks:{stepSize:25,color:'#9CA3AF',font:{size:8},backdropColor:'transparent'},
+            grid:{color:'#E5E7EB'},pointLabels:{color:'#374151',font:{size:9}},
+            angleLines:{color:'#E5E7EB'}
+          }
+        }
+      }
+    });
+  }
+
+  // Trend period tab switching
+  document.querySelectorAll('.trend-period-tab').forEach(function(tab){
+    tab.addEventListener('click',function(){
+      document.querySelectorAll('.trend-period-tab').forEach(function(t){t.classList.remove('active');});
+      this.classList.add('active');
+    });
+  });
+
+  // Review tabs
+  document.querySelectorAll('.rv-tab').forEach(function(tab){
+    tab.addEventListener('click',function(){
+      document.querySelectorAll('.rv-tab').forEach(function(t){t.classList.remove('active');});
+      this.classList.add('active');
+    });
+  });
 }
 
 /* ── その他 ── */
@@ -900,9 +3000,6 @@ function updateCount(){document.getElementById('charCount').textContent=document
 function submitScout(){alert('ご要望を登録しました！\nマッチした医師からの来院オファーをお待ちください。');go('s1');}
 function setTab(el){document.querySelectorAll('.o-tab').forEach(function(t){t.classList.remove('active');});el.classList.add('active');}
 function submitReq(){alert('リクエスト送信完了！\n医院スタッフからの折り返しをお待ちください。');go('s1');}
-
-/* fadeIn animation for premium reviews */
-var style=document.createElement('style');style.textContent='@keyframes fadeIn{from{opacity:0}to{opacity:1}}';document.head.appendChild(style);
 </script>
 </body>
 </html>
