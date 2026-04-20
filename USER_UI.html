@@ -13057,7 +13057,7 @@ let currentDoctor = null;
 
 let radarDrawn = false; /* ── 2. 定数 ── */
 
-const MAX_LABEL = ['専門性', '経歴', '患者満足度', '設備充実度', '最新治療'];
+const MAX_LABEL = ['S-資格', 'S-略歴', 'S-改善', 'S-設備', 'S-最新'];
 
 const MAX_POINTS = {
 
@@ -13065,7 +13065,7 @@ specialty: 30,
 
 career: 15,
 
-satisfaction: 30,
+improvement: 30,
 
 equipment: 15,
 
@@ -13615,7 +13615,7 @@ specialty: 30,
 
 career: 15,
 
-satisfaction: 30,
+improvement: 30,
 
 equipment: 15,
 
@@ -13629,7 +13629,7 @@ specialty: '専門性（資格）',
 
 career: '経歴（略歴）',
 
-satisfaction: '患者満足度（改善率）',
+improvement: 'S-改善',
 
 equipment: '設備充実度',
 
@@ -13643,7 +13643,7 @@ if (scRows) {
 
 var rowsHTML = '';
 
-var keys = ['specialty', 'career', 'satisfaction', 'equipment', 'innovation'];
+var keys = ['specialty', 'career', 'improvement', 'equipment', 'innovation'];
 
 keys.forEach(function(key) {
 
@@ -14003,7 +14003,7 @@ if (!svg) return;
 
 var NS = 'http://www.w3.org/2000/svg';
 
-var keys = ['specialty', 'career', 'satisfaction', 'equipment', 'innovation'];
+var keys = ['specialty', 'career', 'improvement', 'equipment', 'innovation'];
 
 var maxPts = [30, 15, 30, 15, 10];
 
