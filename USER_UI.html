@@ -80,7 +80,7 @@ padding: 0 16px;
 
 .wrap-lg {
 
-max-width: 1100px;
+max-width: 1440px;
 
 margin: 0 auto;
 
@@ -95,6 +95,12 @@ max-width: 980px;
 margin: 0 auto;
 
 padding: 0 16px;
+
+}
+
+.s2-wrap {
+
+max-width: 1600px;
 
 }
 
@@ -750,13 +756,23 @@ padding: 0 16px;
 
 display: grid;
 
-grid-template-columns: repeat(3, 1fr);
+grid-template-columns: repeat(4, 1fr);
 
 gap: 16px;
 
 }
 
-@media(max-width:640px) {
+@media(max-width:768px) {
+
+.reasons-grid {
+
+grid-template-columns: repeat(2, 1fr);
+
+}
+
+}
+
+@media(max-width:480px) {
 
 .reasons-grid {
 
@@ -2089,6 +2105,46 @@ transition: all .2s;
 transform: translateY(-2px);
 
 box-shadow: 0 6px 24px rgba(94, 200, 230, .45);
+
+}
+
+.btn-cta-hero {
+
+display: block;
+
+width: 100%;
+
+max-width: 720px;
+
+margin: 0 auto;
+
+background: linear-gradient(135deg, #FF4757 0%, #FF6B6B 30%, #C56CF0 70%, #4834D4 100%);
+
+color: #fff;
+
+border: none;
+
+border-radius: 12px;
+
+padding: 20px 32px;
+
+font-size: 18px;
+
+font-weight: 800;
+
+cursor: pointer;
+
+box-shadow: 0 6px 24px rgba(255,71,87,.35);
+
+transition: all .2s;
+
+}
+
+.btn-cta-hero:hover {
+
+transform: translateY(-3px);
+
+box-shadow: 0 10px 32px rgba(255,71,87,.45);
 
 }
 
@@ -7299,9 +7355,9 @@ CT/マイクロ完備
 
 </div>
 
-<div style="text-align:center;margin-top:24px;margin-bottom:8px;">
-<button class="btn-post-main" onclick="openKycModal()">クチコミを投稿</button>
-<div style="font-size:12px;color:#666;margin-top:8px;">あなたの投稿が、必ず誰かを助けます</div>
+<div style="margin-top:28px;margin-bottom:8px;padding:0 16px;">
+<button class="btn-cta-hero" onclick="openKycModal()">クチコミを投稿</button>
+<div style="font-size:12px;color:#666;margin-top:8px;text-align:center;">あなたの投稿が、必ず誰かを助けます</div>
 </div>
 
 </div>
