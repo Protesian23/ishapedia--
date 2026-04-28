@@ -1632,7 +1632,7 @@ margin-bottom: 28px;
 
 .det-hdr {
 
-background: linear-gradient(135deg, #c06b8a, #4aa8c9);
+background: linear-gradient(135deg, #f0849a, #c49dd8, #5ec8e6);
 
 padding: 24px 30px;
 
@@ -9278,57 +9278,92 @@ CT / マイクロスコープ設備あり
 </div>
 
 <div style="text-align:right;">
-
 <div style="display:flex;gap:20px;justify-content:flex-end;align-items:flex-end;">
 
-<div>
+<!-- マッチ度 円グラフ -->
+<div class="dh-circle" data-value="98" style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+<div class="dh-score-lbl" data-i18n="doctor.113">あなたとのマッチ度</div>
+<svg width="110" height="110" viewBox="0 0 180 160">
+<defs>
+<radialGradient id="dh-fan-m" cx="50%" cy="50%" r="50%">
+<stop offset="0%" stop-color="#f0849a" stop-opacity="0.18"/>
+<stop offset="45%" stop-color="#f0849a" stop-opacity="0.55"/>
+<stop offset="80%" stop-color="#f0849a" stop-opacity="0.92"/>
+<stop offset="100%" stop-color="#f0849a" stop-opacity="1.0"/>
+</radialGradient>
+<filter id="dh-glow-m" x="-30%" y="-30%" width="160%" height="160%">
+<feGaussianBlur stdDeviation="3" result="blur"/>
+<feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+</filter>
+</defs>
+<g transform="translate(90,80)">
+<circle r="15" fill="none" stroke="rgba(255,255,255,0.10)" stroke-width="0.5"/>
+<circle r="30" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
+<circle r="45" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>
+<circle r="60" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+<path d="M -60 0 A 60 60 0 0 0 60 0" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" fill="none"/>
+<path d="M 60 0 A 60 60 0 0 0 -60 0" stroke="rgba(0,0,0,0.2)" stroke-width="1" fill="none"/>
+<path class="dh-fan-path" d="" fill="url(#dh-fan-m)" filter="url(#dh-glow-m)" opacity="0"/>
+<circle cx="0" cy="-60" r="2.5" fill="rgba(255,255,255,0.6)"/>
+<circle cx="60" cy="0" r="2.5" fill="rgba(255,255,255,0.6)"/>
+<circle cx="0" cy="60" r="2.5" fill="rgba(255,255,255,0.6)"/>
+<circle cx="-60" cy="0" r="2.5" fill="rgba(255,255,255,0.6)"/>
+<text class="dh-num" x="0" y="-8" text-anchor="middle" dominant-baseline="central" style="font-size:24px;font-weight:900;fill:#fff;font-family:'Helvetica Neue',Arial,sans-serif;">0</text>
+<text x="0" y="16" text-anchor="middle" style="font-size:12px;fill:rgba(255,255,255,0.7);">%</text>
+</g>
+</svg>
+</div>
 
-<div class="dh-score-lbl" data-i18n="doctor.113">
+<!-- 総合評価 円グラフ -->
+<div class="dh-circle" data-value="95" style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+<div class="dh-score-lbl" data-i18n="common.285">総合評価スコア</div>
+<svg width="110" height="110" viewBox="0 0 180 160">
+<defs>
+<radialGradient id="dh-fan-s" cx="50%" cy="50%" r="50%">
+<stop offset="0%" stop-color="#f0849a" stop-opacity="0.18"/>
+<stop offset="45%" stop-color="#f0849a" stop-opacity="0.55"/>
+<stop offset="80%" stop-color="#f0849a" stop-opacity="0.92"/>
+<stop offset="100%" stop-color="#f0849a" stop-opacity="1.0"/>
+</radialGradient>
+<filter id="dh-glow-s" x="-30%" y="-30%" width="160%" height="160%">
+<feGaussianBlur stdDeviation="3" result="blur"/>
+<feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+</filter>
+</defs>
+<g transform="translate(90,80)">
+<circle r="15" fill="none" stroke="rgba(255,255,255,0.10)" stroke-width="0.5"/>
+<circle r="30" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
+<circle r="45" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>
+<circle r="60" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+<path d="M -60 0 A 60 60 0 0 0 60 0" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" fill="none"/>
+<path d="M 60 0 A 60 60 0 0 0 -60 0" stroke="rgba(0,0,0,0.2)" stroke-width="1" fill="none"/>
+<path class="dh-fan-path" d="" fill="url(#dh-fan-s)" filter="url(#dh-glow-s)" opacity="0"/>
+<circle cx="0" cy="-60" r="2.5" fill="rgba(255,255,255,0.6)"/>
+<circle cx="60" cy="0" r="2.5" fill="rgba(255,255,255,0.6)"/>
+<circle cx="0" cy="60" r="2.5" fill="rgba(255,255,255,0.6)"/>
+<circle cx="-60" cy="0" r="2.5" fill="rgba(255,255,255,0.6)"/>
+<text class="dh-num" x="0" y="-8" text-anchor="middle" dominant-baseline="central" style="font-size:24px;font-weight:900;fill:#fff;font-family:'Helvetica Neue',Arial,sans-serif;">0</text>
+<text x="0" y="16" text-anchor="middle" style="font-size:12px;fill:rgba(255,255,255,0.7);">pt</text>
+</g>
+</svg>
+</div>
 
-あなたとのマッチ度
+</div>
+</div>
 
 </div>
 
-<div style="font-size:32px;font-weight:900;color:#fff;line-height:1;letter-spacing:-1px;font-family:'Helvetica Neue',Arial,sans-serif;">
-
-98
-
-<span style="font-size:14px;font-weight:500;color:rgba(255,255,255,.5);">
-
-%
-
-</span>
-
+<!-- 住所・電話番号(本番Vercel側を踏襲) -->
+<div class="dh-contact" style="display:flex;gap:24px;align-items:center;flex-wrap:wrap;margin:0 0 16px;padding:12px 16px;background:rgba(255,255,255,0.6);border:0.5px solid rgba(0,0,0,0.06);border-radius:8px;font-size:13px;color:#5F5E5A;font-family:'Helvetica Neue',Arial,sans-serif;">
+<div style="display:flex;align-items:center;gap:8px;">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f0849a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+<span class="dh-address">〒107-0061 東京都港区北青山3-15-2</span>
+<a href="javascript:void(0)" onclick="alert('地図を表示します（モック）')" style="color:#5ec8e6;text-decoration:none;font-weight:600;font-size:12px;">地図を開く</a>
 </div>
-
+<div style="display:flex;align-items:center;gap:8px;">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f0849a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+<a href="tel:0312345678" class="dh-phone" style="color:#5F5E5A;text-decoration:none;font-weight:600;">03-1234-5678</a>
 </div>
-
-<div>
-
-<div class="dh-score-lbl" data-i18n="common.285">
-
-総合評価スコア
-
-</div>
-
-<div class="dh-score">
-
-95
-
-<span>
-
-pt
-
-</span>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
 </div>
 
 <!-- 360 TOUR TABS -->
@@ -10248,6 +10283,11 @@ LIVE 360° VIEW
 クチコミを投稿
 
 </button>
+
+<div class="post-cta-msg" style="margin-top:6px;text-align:center;font-size:12px;line-height:1.5;">
+<div style="color:#666;" data-i18n="review.700">30秒で完了</div>
+<div style="color:#dc2626;font-weight:600;margin-top:2px;" data-i18n="review.701">あなたの投稿で、助かる人が必ずいます</div>
+</div>
 
 </div>
 
@@ -12321,6 +12361,8 @@ AIコンシェルジュ相談履歴
 
 </h3>
 
+<div class="kyc-justice-msg" style="margin-top:8px;font-size:13px;color:#dc2626;font-weight:600;" data-i18n="review.702">あなたの声で、助かる人が必ずいます</div>
+
 <button class="modal-close" onclick="closeKycModal()">
 
 ×
@@ -13670,7 +13712,19 @@ if (scoreArea) {
 
 var matchPct = parseFloat(doc.score_total).toFixed(0);
 
-scoreArea.innerHTML = '<div style="display:flex;gap:20px;justify-content:flex-end;align-items:flex-end;">' + '<div><div class="dh-score-lbl" data-i18n="doctor.113">あなたとのマッチ度</div><div style="font-size:32px;font-weight:900;color:#fff;line-height:1;letter-spacing:-1px;font-family:Helvetica Neue,Arial,sans-serif;">' + matchPct + '<span style="font-size:14px;font-weight:500;color:rgba(255,255,255,.5);">%</span></div></div>' + '<div><div class="dh-score-lbl" data-i18n="common.285">総合評価スコア</div><div class="dh-score">' + matchPct + '<span>pt</span></div></div>' + '</div>';
+var circles = scoreArea.querySelectorAll('.dh-circle');
+
+circles.forEach(function(c){
+
+c.setAttribute('data-value', matchPct);
+
+var fan = c.querySelector('.dh-fan-path');
+
+if (fan) fan.setAttribute('data-value', matchPct);
+
+});
+
+if (typeof runDhCircleAnimation === 'function') runDhCircleAnimation(scoreArea);
 
 }
 
@@ -13966,6 +14020,43 @@ console.error('[ISHAPEDIA] renderReviews error:', err);
 
 } /* ── 10. 画面遷移 ── */
 
+/* ── 円グラフ(マッチ度+総合評価)アニメーション ── */
+function runDhCircleAnimation(rootEl) {
+  var root = rootEl || document;
+  var circles = root.querySelectorAll('.dh-circle');
+  if (!circles.length) return;
+  var dur = 1800;
+  function ease(t){ return t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2, 2)/2; }
+  function fanPathFromValue(v) {
+    v = Math.max(0, Math.min(100, parseFloat(v) || 0));
+    if (v <= 0) return '';
+    var ang = (v / 100) * 2 * Math.PI - Math.PI / 2;
+    var x = 60 * Math.cos(ang), y = 60 * Math.sin(ang);
+    var largeArc = v > 50 ? 1 : 0;
+    return 'M 0 0 L 0 -60 A 60 60 0 ' + largeArc + ' 1 ' + x.toFixed(2) + ' ' + y.toFixed(2) + ' Z';
+  }
+  circles.forEach(function(c){
+    var fan = c.querySelector('.dh-fan-path');
+    var num = c.querySelector('.dh-num');
+    var target = parseFloat(c.getAttribute('data-value')) || 0;
+    if (fan) {
+      fan.setAttribute('d', fanPathFromValue(target));
+      fan.setAttribute('opacity', '0');
+    }
+    if (num) num.textContent = '0';
+    var start = null;
+    function step(ts){
+      if (!start) start = ts;
+      var p = Math.min(1, (ts - start) / dur);
+      var eased = ease(p);
+      if (fan) fan.setAttribute('opacity', eased.toFixed(3));
+      if (num) num.textContent = Math.round(target * eased);
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  });
+}
+
 function goRaw(id) {
 
 if (id === 's2') hasSearched = true;
@@ -13995,6 +14086,13 @@ if (mb) mb.style.display = (id === 's3') ? 'flex' : 'none';
 async function go(id) {
 
 goRaw(id);
+
+if (id === 's3') {
+  setTimeout(function(){
+    var s3 = document.getElementById('s3');
+    if (s3) runDhCircleAnimation(s3);
+  }, 50);
+}
 
 if (id === 's2') {
 
@@ -15322,6 +15420,11 @@ if(oc.indexOf('inbound') !== -1) applyMode('inbound');
 
 else applyMode('dom');
 
+}
+
+var s3 = document.getElementById('s3');
+if (s3 && !s3.classList.contains('hidden')) {
+  setTimeout(function(){ runDhCircleAnimation(s3); }, 50);
 }
 
 });
