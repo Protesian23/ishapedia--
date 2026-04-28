@@ -10449,7 +10449,7 @@ AIクチコミ要約
 
 <span class="r-ok" data-i18n="common.103">
 
-✓ 治療後改善した
+○ 治療後改善した
 
 </span>
 
@@ -10485,7 +10485,7 @@ AIクチコミ要約
 
 <span class="r-ok" data-i18n="common.103">
 
-✓ 治療後改善した
+○ 治療後改善した
 
 </span>
 
@@ -10553,7 +10553,7 @@ AIクチコミ要約
 
 <span class="r-ok" data-i18n="common.103">
 
-✓ 治療後改善した
+○ 治療後改善した
 
 </span>
 
@@ -11789,7 +11789,7 @@ AI相談回数
 
 <div class="mp-row-meta" data-i18n="review.71">
 
-2026/03/15 投稿 · ✓ 改善報告あり
+2026/03/15 投稿 · ○ 改善報告あり
 
 </div>
 
@@ -11835,7 +11835,7 @@ AI相談回数
 
 <div class="mp-row-meta" data-i18n="review.70">
 
-2025/11/20 投稿 · ✓ 改善報告あり
+2025/11/20 投稿 · ○ 改善報告あり
 
 </div>
 
@@ -12663,7 +12663,7 @@ const I18N_ZH = {
 "booking.96": "※为保障双方权益，预约确认时需通过系统支付“预约保证金（定金）”。具体金额由医院根据治疗内容设定。您可在预约确认前查看详细的取消政策。",
 "common.10": "中村 愛",
 "common.102": "✓ 已验证就诊记录",
-"common.103": "✓ 治疗后已改善",
+"common.103": "○ 治疗后已改善",
 "common.104": "“我们完全能够满足您‘低痛感治疗’的需求。本院引入了静脉内镇静法，即使是患有牙科恐惧症的患者也能在睡眠中轻松完成治疗。诚邀您来院就诊。”",
 "common.108": "【六本木】家庭牙科 / 欢迎携童就诊・无障碍设施完备",
 "common.109": "【南青山】儿童牙科・正畸专科 / 欢迎携童就诊",
@@ -13077,8 +13077,8 @@ const I18N_ZH = {
 "review.370": "我发布的评价",
 "review.371": "，在该医生的评价中，表示“几乎无痛”的报告高达",
 "review.372": "100% 真实患者的硬核认证评价",
-"review.70": "2025/11/20 发布 · ✓ 治疗后已改善",
-"review.71": "2026/03/15 发布 · ✓ 治疗后已改善",
+"review.70": "2025/11/20 发布 · ○ 治疗后已改善",
+"review.71": "2026/03/15 发布 · ○ 治疗后已改善",
 "review.89": "AI评价摘要",
 "scout.118": "以该条件等待医院邀约",
 "scout.131": "候选登记",
@@ -14006,7 +14006,7 @@ return '<span class="neg-tag">' + t + '</span>';
 
 }).join('') + '</div>' : '';
 
-return '' + '<div class="rev-item ' + (isNeg ? 'neg' : 'new') + '">' + '<div class="rev-top">' + '<span class="' + (isOk ? 'r-ok' : 'r-ng') + '">' + (isOk ? '✓ 治療後改善した' : '△ 改善しなかった・不満') + '</span>' + '<span class="r-date">' + dateStr + '</span>' + '</div>' + '<div class="rev-text">' + (r.body_masked || '') + '</div>' + kycBadge + negTagsHTML + '</div>';
+return '' + '<div class="rev-item ' + (isNeg ? 'neg' : 'new') + '">' + '<div class="rev-top">' + '<span class="' + (isOk ? 'r-ok' : 'r-ng') + '">' + (isOk ? '○ 治療後改善した' : '△ 改善しなかった・不満') + '</span>' + '<span class="r-date">' + dateStr + '</span>' + '</div>' + '<div class="rev-text">' + (r.body_masked || '') + '</div>' + kycBadge + negTagsHTML + '</div>';
 
 }).join('');
 
@@ -14512,7 +14512,7 @@ var div = document.createElement('div');
 
 div.className = 'rev-item new';
 
-div.innerHTML = '<div class="rev-top"><span class="' + (isOk ? 'r-ok' : 'r-ng') + '">' + (isOk ? '✓' : '△') + ' ' + status + '</span><span class="r-date">' + today + '</span></div>' + '<div class="rev-text">' + masked + '</div>';
+div.innerHTML = '<div class="rev-top"><span class="' + (isOk ? 'r-ok' : 'r-ng') + '">' + (isOk ? '○' : '△') + ' ' + status + '</span><span class="r-date">' + today + '</span></div>' + '<div class="rev-text">' + masked + '</div>';
 
 var revList = document.getElementById('revList');
 
@@ -14588,7 +14588,7 @@ var div = document.createElement('div');
 
 div.className = 'rev-item new';
 
-div.innerHTML = '<div class="rev-top"><span class="' + (isOk ? 'r-ok' : 'r-ng') + '">' + (isOk ? '✓' : '△') + ' ' + status + '</span><span class="r-date">' + today + '</span></div>' + '<div class="rev-text">' + masked + '</div>' + '<div><span class="kyc-badge" data-i18n="common.417">✓ ✓ 受診証明済み</span>' + (followup ? '<span class="kyc-badge" style="background:#f0f9ff;color:#0369a1;border-color:#bae6fd;margin-left:4px;">フォローアップ登録済</span>' : '') + '</div>';
+div.innerHTML = '<div class="rev-top"><span class="' + (isOk ? 'r-ok' : 'r-ng') + '">' + (isOk ? '○' : '△') + ' ' + status + '</span><span class="r-date">' + today + '</span></div>' + '<div class="rev-text">' + masked + '</div>' + '<div><span class="kyc-badge" data-i18n="common.417">✓ ✓ 受診証明済み</span>' + (followup ? '<span class="kyc-badge" style="background:#f0f9ff;color:#0369a1;border-color:#bae6fd;margin-left:4px;">フォローアップ登録済</span>' : '') + '</div>';
 
 var first = document.getElementById('revList') ? document.getElementById('revList').querySelector('.rev-item') : null;
 
@@ -15489,7 +15489,7 @@ var D={
 '#待ち時間が長い':'#等待时间长','#受付の対応':'#前台应对',
 '平均待ち時間':'平均等待时间','自費を勧められた割合':'被推荐自费比例',
 '混みやすい曜日':'容易拥挤的日子','リピート率':'复诊率',
-'✓ 治療後改善した':'✓ 治疗后改善','△ 改善しなかった・不満':'△ 未改善・不满意',
+'○ 治療後改善した':'○ 治疗后改善','△ 改善しなかった・不満':'△ 未改善・不满意',
 '✓ ✓ 受診証明済み':'✓ ✓ 已认证就诊记录',
 '自費の強要: あり':'强制自费: 有','通院: 想定より長引いた':'就诊: 比预期更长',
 '受付対応: 不愛想':'前台态度: 冷淡',
